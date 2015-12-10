@@ -8,7 +8,7 @@ function countValue(x) {
     return _.curry((arr) => _.filter(arr, (value) => value == x));
 }
 
-function FloorCalculator(instructions) {
+export function getFloor(instructions) {
     const get = (x) => _.curry((chars) => chars[x]);
     const count = (character) =>  _.compose(get("length"), countValue(character), _.map)(instructions);
 
@@ -18,11 +18,13 @@ function FloorCalculator(instructions) {
     return up + down;
 }
 
+export function atBasement(instructions) {
+    
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const instructions = FS.readFileSync(inputPath, "utf-8");
     
     console.log("To what floor do the instructions take Santa?", FloorCalculator(instructions));
 }
-
-export default FloorCalculator;
