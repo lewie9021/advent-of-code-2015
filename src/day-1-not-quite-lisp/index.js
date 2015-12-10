@@ -1,10 +1,21 @@
 import FS from "fs";
 import Path from "path";
+import _ from "lodash";
 
 export const title = "Day 1: Not Quite Lisp";
 
-function FloorCalculator() {
+function countValue(x) {   
+    return _.curry((arr) => _.filter(arr, (value) => value == x));
+}
+
+function FloorCalculator(instructions) {
+    const get = (x) => _.curry((chars) => chars[x]);
+    const count = (character) =>  _.compose(get("length"), countValue(character), _.map)(instructions);
+
+    const up = count("(");
+    const down = count(")") * -1;
     
+    return up + down;
 }
 
 export function run() {
