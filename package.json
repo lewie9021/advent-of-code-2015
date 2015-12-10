@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/lewie9021/advent-of-code-2015#readme",
   "dependencies": {
-    "lodash": "3.10.1"
+    "lodash": "3.10.1",
+    "lodash-fp": "0.10.2"
   },
   "devDependencies": {
     "babel-cli": "6.3.15",
