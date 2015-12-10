@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { getFloor, atBasement, title } from "../src/day-1-not-quite-lisp";
+import { getFloor, getBasement, title } from "./";
 
 describe(title, function() {
 
@@ -34,11 +34,11 @@ describe(title, function() {
     describe("Part 2:", function() {
 
         it("should evaluate ')' as postion 1", function() {
-            expect(atBasement(")")).to.eq(1);
+            expect(getBasement(")")).to.eq(1);
         });
 
         it("should evaluate '()())' as position 5", function() {
-            expect(atBasement("()())")).to.eq(5);
+            expect(getBasement("()())")).to.eq(5);
         });
         
     });

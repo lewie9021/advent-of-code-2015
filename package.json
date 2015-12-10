@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js --exec babel-node",
-    "test": "mocha --watch --require babel-register"
+    "test": "mocha --watch --recursive --require babel-register src"
   },
   "repository": {
     "type": "git",
