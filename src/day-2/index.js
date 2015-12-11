@@ -4,12 +4,13 @@ import _ from "lodash-fp";
 
 export const title = "Day 2: I Was Told There Would Be No Math";
 
+const parse =  _.compose(_.map(_.parseInt(10)), split("x"));
+
 function split(delimiter) {
     return _.curry((str) => str.split(delimiter));
 }
 
-export function getSquareFootage(measurements) {
-    const parse = _.compose(_.map(_.parseInt(10)), split("x"));
+export function getWrappingFootage(measurements) {   
     const [length, width, height] = parse(measurements);
 
     // Do some math...
@@ -20,10 +21,24 @@ export function getSquareFootage(measurements) {
     return surfaceArea + smallestSide;
 }
 
+export function getRibbonFootage(measurements) {
+    const [length, width, height] = parse(measurements);
+
+    // Do some math...
+    const smallestSide = Math.min(width + height, length + height, width + length);
+    const volume = length * width * height;
+
+    // Perimeter of the smallest side + cubic volume.
+    return (smallestSide * 2) + volume;
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
-    const input = FS.readFileSync(inputPath, "utf-8").trim();
-    const totalWrappingPaper = _.compose(_.reduce(_.add, 0), _.map(getSquareFootage), split("\n"));
+    const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
+    const sum = _.compose(_.reduce(_.add, 0));
+    const totalWrappingPaper = _.compose(sum, _.map(getWrappingFootage));
+    const totalRibbon = _.compose(sum, _.map(getRibbonFootage));
     
     console.log("All numbers in the elves' list are in feet. How many total square feet of wrapping paper should they order?", totalWrappingPaper(input));
+    console.log("How many total feet of ribbon should they order?", totalRibbon(input));
 }
