@@ -22,7 +22,8 @@ export function getSquareFootage(measurements) {
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
-    const measurements = FS.readFileSync(inputPath, "utf-8").trim();
+    const input = FS.readFileSync(inputPath, "utf-8").trim();
+    const totalWrappingPaper = _.compose(_.reduce(_.add, 0), _.map(getSquareFootage), split("\n"));
     
-    console.log("All numbers in the elves' list are in feet. How many total square feet of wrapping paper should they order?");
+    console.log("All numbers in the elves' list are in feet. How many total square feet of wrapping paper should they order?", totalWrappingPaper(input));
 }
