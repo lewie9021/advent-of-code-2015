@@ -1,12 +1,9 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
+import { split } from "../helpers";
 
 export const title = "Day 3: Perfectly Spherical Houses in a Vacuum";
-
-function split(delimiter) {
-    return _.curry((str) => str.split(delimiter));
-}
 
 function navigate(directions) {
     return _.reduce((tracking, [xx, yy]) => {

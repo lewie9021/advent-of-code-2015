@@ -1,14 +1,11 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
+import { split } from "../helpers";
 
 export const title = "Day 2: I Was Told There Would Be No Math";
 
 const parse =  _.compose(_.map(_.parseInt(10)), split("x"));
-
-function split(delimiter) {
-    return _.curry((str) => str.split(delimiter));
-}
 
 export function getWrappingFootage(measurements) {   
     const [length, width, height] = parse(measurements);
