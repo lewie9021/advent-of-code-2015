@@ -24,14 +24,16 @@ export function isNiceString(string) {
     return threeVowels(string) && duplicateLetters(string) && !blacklistWords(string);
 }
 
-export function isNiceString2(string) {
-    const getSandwichDoubles = (counts, l, i, arr) => {
+function getSandwichDoubles(x) {
+    return _.reduce((counts, l, i, arr) => {
         if (!i)
             return counts;
 
+        const fragment = arr.slice(i - 1, i + 2).join("");
+        
         // Contains a pair of any two letters that appears at least twice
         // in the string without overlapping.
-        const double = arr[i - 1] + arr[i];
+        const double = fragment.substr(0, 2);
         const rest = arr.slice(i + 1).join("");
 
         if (rest.indexOf(double) != -1)
@@ -39,17 +41,22 @@ export function isNiceString2(string) {
 
         // Contains at least one letter which repeats with exactly one
         // letter between them.
-        const sandwich = arr.slice(i - 1, i + 2);
-
-        if (sandwich[0] == sandwich[2])
-            counts.sandwiches[sandwich.join("")] = null;
+        if (fragment[0] === fragment[2])
+            counts.sandwiches[fragment] = null;
         
         return counts;
-    };
+    }, {
+        doubles: {},
+        sandwiches: {}
+    }, x);
+}
 
-    const counts = _.reduce(getSandwichDoubles, {doubles: {}, sandwiches: {}}, string.split(""));
+export function isNiceString2(string) {
+    const found = _.compose(_.get("length"), Object.keys);
+    const counts = _.compose(getSandwichDoubles, split(""));
+    const isValid = _.compose(_.isEqual(2), _.get("length"), _.filter(_.gte(1)), _.map(found), counts);
 
-    return !!(Object.keys(counts.doubles).length && Object.keys(counts.sandwiches).length);
+    return isValid(string);
 }
 
 export function run() {
