@@ -2,9 +2,11 @@ import { expect } from "chai";
 import { title, getHashWithFiveZeros } from "./";
 
 describe(title, function() {
-
-    describe("Part 1:", function() {
+    // Creating hashes is rather slow :(
+    this.timeout(0);
     
+    describe("Part 1:", function() {
+        
         it("should evaluate 'abcdef' as 609043", function() {
             expect(getHashWithFiveZeros("abcdef")).to.eq(609043);
         });
