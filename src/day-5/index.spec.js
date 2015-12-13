@@ -38,7 +38,7 @@ describe(title, function() {
         });
 
         it("should evaluate 'uurcxstgmygtbstg' as naughty", function() {
-            expect(isNiceString2("ieodomkazucvgmuy")).to.eq(false);
+            expect(isNiceString2("uurcxstgmygtbstg")).to.eq(false);
         });
 
         it("should evaluate 'ieodomkazucvgmuy' as naughty", function() {
