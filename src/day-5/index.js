@@ -25,38 +25,31 @@ export function isNiceString(string) {
 }
 
 export function isNiceString2(string) {
-    // Contains a pair of any two letters that appears at least twice in the string without overlapping.
-    const duplicateDoubles = string
-              .split("")
-              .reduce((counts, x, i, arr) => {
-                  if (!i)
-                      return counts;
+    const getSandwichDoubles = (counts, l, i, arr) => {
+        if (!i)
+            return counts;
 
-                  const letters = arr[i - 1] + arr[i];
-                  const substr = arr.slice(i + 1).join("");
+        // Contains a pair of any two letters that appears at least twice
+        // in the string without overlapping.
+        const double = arr[i - 1] + arr[i];
+        const rest = arr.slice(i + 1).join("");
 
-                  if (substr.indexOf(letters) != -1)
-                      counts[letters] = null;
-                  
-                  return counts;
-              }, {});
-    
-    // Contains at least one letter which repeats with exactly one letter between them.
-    const hasSandvich = string
-              .split("")
-              .reduce((counts, x, i, arr) => {
-                  if (!i)
-                      return counts;
-                  
-                  const letters = arr.slice(i - 1, i + 2);
+        if (rest.indexOf(double) != -1)
+            counts.doubles[double] = null;
 
-                  if (letters[0] == letters[2])
-                      counts[letters.join("")] = null;
-                  
-                  return counts;
-              }, {});
+        // Contains at least one letter which repeats with exactly one
+        // letter between them.
+        const sandwich = arr.slice(i - 1, i + 2);
 
-    return !!(Object.keys(duplicateDoubles).length && Object.keys(hasSandvich).length);
+        if (sandwich[0] == sandwich[2])
+            counts.sandwiches[sandwich.join("")] = null;
+        
+        return counts;
+    };
+
+    const counts = _.reduce(getSandwichDoubles, {doubles: {}, sandwiches: {}}, string.split(""));
+
+    return !!(Object.keys(counts.doubles).length && Object.keys(counts.sandwiches).length);
 }
 
 export function run() {
