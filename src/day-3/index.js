@@ -1,7 +1,7 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
-import { split } from "../helpers";
+import { split, groupBy } from "../helpers";
 
 export const title = "Day 3: Perfectly Spherical Houses in a Vacuum";
 
@@ -25,11 +25,11 @@ const direction = {
     "^": [0, -1]
 };
 
-export function getDeliveredHouses(instructions) {
-    const parse = _.compose(_.map((x) => direction[x]), split(""));
-    const total = _.compose(_.get("length"), Object.keys, _.get("houses"));
-    const deliver = _.compose(total, navigate, parse);
-
+export function getDeliveredHouses(instructions, players = 1) {
+    const parse = _.compose(groupBy((x, i) => i % players), _.map((x, i) => direction[x]), split(""));
+    const total = _.compose(_.get("length"), Object.keys, _.reduce(_.merge, {}));
+    const deliver = _.compose(total, _.map(_.get("houses")), _.map(navigate), parse);
+    
     return deliver(instructions);
 }
 
@@ -38,4 +38,5 @@ export function run() {
     const input = FS.readFileSync(inputPath, "utf-8").trim();
     
     console.log("How many houses receive at least one present?", getDeliveredHouses(input));
+    console.log("This year, how many houses receive at least one present?", getDeliveredHouses(input, 2));
 }
