@@ -5,16 +5,18 @@ import { split } from "../helpers";
 
 export const title = "Day 5: Doesn't He Have Intern-Elves For This?";
 
-export function isNiceString(str) {
+export function isNiceString(string) {
     // Contains at least 3 vowels.
     const vowels = ["a", "e", "i", "o", "u"];
-    const threeVowels = _.compose(_.gte(3), _.get("length"), _.filter((x) => _.includes(x, vowels)), split(""))(str);
+    const threeVowels = _.compose(_.gte(3), _.get("length"), _.filter((x) => _.includes(x, vowels)), split(""));
     
     // Contains at least one letter that appears twice.
-    
+    const pattern = /([a-z])\1+/;
+    const hasDuplicateLetters = pattern.test(string);
     
     // Doesn't contain 'ab', 'cd', 'pq', or 'xy'.
 
+    
     
 }
 
