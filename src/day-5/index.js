@@ -5,6 +5,8 @@ import { split } from "../helpers";
 
 export const title = "Day 5: Doesn't He Have Intern-Elves For This?";
 
+const getMatches = _.curry((list, string) => _.filter((x) => _.includes(x, string), list));
+
 export function isNiceString(string) {
     // Contains at least 3 vowels.
     const vowels = ["a", "e", "i", "o", "u"];
@@ -12,12 +14,13 @@ export function isNiceString(string) {
     
     // Contains at least one letter that appears twice.
     const pattern = /([a-z])\1+/;
-    const hasDuplicateLetters = pattern.test(string);
+    const duplicateLetters = (str) => pattern.test(str);
     
     // Doesn't contain 'ab', 'cd', 'pq', or 'xy'.
+    const blacklist = ["ab", "cd", "pq", "xy"];
+    const blacklistWords = _.compose(_.gte(1), _.get("length"), getMatches(blacklist));
 
-    
-    
+    return threeVowels(string) && duplicateLetters(string) && !blacklistWords(string);
 }
 
 export function run() {
