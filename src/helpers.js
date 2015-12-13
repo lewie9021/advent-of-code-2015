@@ -1,3 +1,4 @@
+import __ from "lodash";
 import _ from "lodash-fp";
 
 export function split(delimiter) {
@@ -9,3 +10,5 @@ export function log(x) {
 
     return x;
 }
+
+export const groupBy = _.curryRight(__.groupBy, 2);
