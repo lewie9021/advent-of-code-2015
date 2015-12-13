@@ -26,6 +26,7 @@ export function isNiceString(string) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
+    const niceStrings = _.compose(_.get("length"), _.filter(isNiceString));
     
-    console.log("How many strings are nice?");
+    console.log("How many strings are nice?", niceStrings(input));
 }
