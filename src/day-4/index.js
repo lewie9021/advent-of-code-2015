@@ -2,6 +2,7 @@ import FS from "fs";
 import Path from "path";
 import Crypto from "crypto";
 import _ from "lodash-fp";
+import { doWhile } from "../helpers";
 
 export const title = "Day 4: The Ideal Stocking Stuffer";
 
@@ -23,7 +24,15 @@ function findHashIndex(key, i) {
 }
 
 export function getHashWithFiveZeros(key) {
-    // return findHashIndex(key, 0);
+    const calculateNextHash = ({key, index}) => ({
+        index: index + 1,
+        hash: md5(`${key}${index + 1}`),
+        key
+    });
+
+    const getHashIndex = _.compose(_.get("index"), doWhile(calculateNextHash, (x) => x.hash.indexOf("00000") != 0));
+
+    return getHashIndex({index: -1, key});
 }
 
 export function run() {
