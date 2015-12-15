@@ -23,8 +23,27 @@ function parse(instruction) {
     };
 }
 
+const modes = {
+    "on": () => 1,
+    "off": () => 0,
+    "toggle": (x) => !x
+};
+
 export function configureLighting(grid, instructions) {
     const {mode, pointA, pointB} = parse(instructions);
+    const operation = modes[mode];
+    const [x1, y1] = pointA;
+    const [x2, y2] = pointB;
+    const columns = _.range(x1, x2 + 1);
+    const rows = _.range(y1, y2 + 1);
+    
+    _.map((y) => {
+        _.map((x) => {
+              grid[x][y] = operation(grid[x][y]);
+        }, columns);
+    }, rows);
+
+    return grid;
 }
 
 export function run() {
