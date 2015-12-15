@@ -49,6 +49,10 @@ export function configureLighting(grid, instructions) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
-    
-    console.log("After following the instructions, how many lights are lit?");
+    const total = _.compose(_.sum, _.map(_.sum));
+    const grid = createGrid(1000, 1000);
+
+    input.forEach((x) => configureLighting(grid, x));
+
+    console.log("After following the instructions, how many lights are lit?", total(grid));
 }
