@@ -5,7 +5,7 @@ import { split, fill } from "../helpers";
 
 export const title = "Day 6: Probably a Fire Hazard";
 
-export function createGrid(width, height, value = 0) {
+export function createGrid(width, height, value = false) {
     let rows = fill(value, Array(height));
     const columns = () => fill(value, Array(width));
 
@@ -24,8 +24,8 @@ function parse(instruction) {
 }
 
 const modes = {
-    "on": () => 1,
-    "off": () => 0,
+    "on": () => true,
+    "off": () => false,
     "toggle": (x) => !x
 };
 
@@ -39,7 +39,7 @@ export function configureLighting(grid, instructions) {
     
     _.map((y) => {
         _.map((x) => {
-              grid[x][y] = operation(grid[x][y]);
+              grid[y][x] = operation(grid[y][x]);
         }, columns);
     }, rows);
 
