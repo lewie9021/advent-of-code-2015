@@ -83,6 +83,10 @@ describe(title, function() {
                 y: 456
             });
         });
+
+        it("should not reassign identifiers", function() {
+            expect(execute({x: 1}, "123 -> x")).to.eql({x: 1});
+        });
         
     });
 
