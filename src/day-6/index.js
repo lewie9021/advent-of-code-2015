@@ -44,9 +44,27 @@ export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
     const total = _.compose(_.sum, _.map(_.sum));
+
+    
     const grid = createGrid(1000, 1000);
+    const modes = {
+        "on": () => true,
+        "off": () => false,
+        "toggle": (x) => !x
+    };
+    
+    const grid2 = createGrid(1000, 1000);
+    const modes2 = {
+        "on": (x) => x + 1,
+            "off": (x) => Math.max(0, x - 1),
+            "toggle": (x) => x + 2
+    };
 
-    input.forEach((x) => configureLighting(grid, x));
-
+    input.forEach((instructions) => {
+        configureLighting(grid, modes, instructions);
+        configureLighting(grid2, modes2, instructions);
+    });
+    
     console.log("After following the instructions, how many lights are lit?", total(grid));
+    console.log("What is the total brightness of all lights combined after following Santa's instructions?", total(grid2));
 }

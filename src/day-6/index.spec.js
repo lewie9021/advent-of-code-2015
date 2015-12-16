@@ -51,8 +51,8 @@ describe(title, function() {
 
     describe("Part 2:", function() {
         const modes = {
-            "on": () => 1,
-            "off": () => 0,
+            "on": (x) => x + 1,
+            "off": (x) => Math.max(0, x - 1),
             "toggle": (x) => x + 2
         };
 
