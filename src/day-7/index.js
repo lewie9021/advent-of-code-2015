@@ -45,33 +45,43 @@ export function execute(baseScope, instruction) {
     const operatorName = operation.match(/[A-Z]+/);
 
     if (!operatorName) {
-        scope[identifier] = values[0];
+        if (typeof scope[identifier] === "undefined")
+            scope[identifier] = values[0];
 
         return scope;
     }
 
     const operator = operators[operatorName[0]];
-    
-    scope[identifier] = warpValue(operator(...values), maxValue);
+
+    if (typeof scope[identifier] === "undefined")
+        scope[identifier] = warpValue(operator(...values), maxValue);
     
     return scope;
 }
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
-    let input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
-    let scope = {};
+    const input = FS.readFileSync(inputPath, "utf-8").trim();
+    const followInstructions = (input, scope) => {
+        let instructions = input.split("\n");
+        
+        // Build up the scope object through each instruction.
+        while (instructions.length) {
+            const instruction = instructions.shift();
 
-    // Build up the scope object through each instruction.
-    while (input.length) {
-        const instruction = input.shift();
+            try {
+                scope = execute(scope, instruction);
+            } catch(e) {
+                instructions.push(instruction);
+            };
+        }
 
-        try {
-            scope = execute(scope, instruction);
-        } catch(e) {
-            input.push(instruction);
-        };
-    }
+        return scope;
+    };
     
-    console.log("In little Bobby's kit's instructions booklet, what signal is ultimately provided to wire a?", scope["a"]);
+    const partOne = followInstructions(input, {});
+    const partTwo = followInstructions(input, {b: partOne["a"]});
+    
+    console.log("In little Bobby's kit's instructions booklet, what signal is ultimately provided to wire a?", partOne["a"]);
+    console.log("What new signal is ultimately provided to wire a?", partTwo["a"]);
 }
