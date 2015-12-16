@@ -24,45 +24,54 @@ function lookupValues(scope, values) {
 
 const maxValue = Math.pow(2, 16);
 
-function wrapValue(value, max) {
+function warpValue(value, max) {
    return ((value % max) + max) % max;
 }
 
 export function execute(baseScope, instruction) {
     const scope = _.clone(baseScope);
     const [operation, identifier] = _.map(_.trim, split("->", instruction));
-    const constant = parseInt(operation, 10);
-
-    // Get the operator function.
-    const pattern = new RegExp(`(${Object.keys(operators).join("|")})`, "g");
-    const match = operation.match(pattern);
-
-    // Here, 'operation' is either a constant or an identifier.
-    if (!match) {
-        scope[identifier] = wrapValue(lookupValues(scope, operation)[0], maxValue);
+    const values = _.map((value) => {
+        const constant = parseInt(value, 10);
         
+        if (!isNaN(constant))
+            return constant;
+
+        if (!scope.hasOwnProperty(value))
+            throw new Error(`${value} is not defined`);
+        
+        return scope[value];
+    }, operation.match(/([a-z]+)|([0-9]+)/g) || []);
+    const operatorName = operation.match(/[A-Z]+/);
+
+    if (!operatorName) {
+        scope[identifier] = values[0];
+
         return scope;
     }
-    
-    const [name] = match;
-    const operator = operators[name];
-    
-    // Parse the values so we are working with constants.
-    const values = lookupValues(scope, operation.replace(name, ""));
 
-    // Pass the values to the operator and create / update the value in scope.
-    scope[identifier] = wrapValue(operator(...values), maxValue);
-
+    const operator = operators[operatorName[0]];
+    
+    scope[identifier] = warpValue(operator(...values), maxValue);
+    
     return scope;
 }
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
-    const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
+    let input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
     let scope = {};
 
     // Build up the scope object through each instruction.
-    input.forEach((x) => scope = execute(scope, x));
+    while (input.length) {
+        const instruction = input.shift();
+
+        try {
+            scope = execute(scope, instruction);
+        } catch(e) {
+            input.push(instruction);
+        };
+    }
     
     console.log("In little Bobby's kit's instructions booklet, what signal is ultimately provided to wire a?", scope["a"]);
 }
