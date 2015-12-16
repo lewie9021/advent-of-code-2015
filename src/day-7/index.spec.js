@@ -45,6 +45,13 @@ describe(title, function() {
                 h: 65534
             });
         });
+
+        it("should evaluate 'x -> y' as {x: 1, y: 1}", function() {
+            expect(execute({x: 1}, "x -> y")).to.eql({
+                x: 1,
+                y: 1
+            });
+        });
         
     });
 
