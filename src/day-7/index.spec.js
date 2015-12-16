@@ -52,6 +52,37 @@ describe(title, function() {
                 y: 1
             });
         });
+
+        it("should throw evaluting variables that don't exist in scope", function() {
+            expect(() => execute({x: 1}, "a -> y")).to.throw("a is not defined");
+        });
+
+        it("should correctly evaluate the example", function() {
+            const input = [
+                "123 -> x",
+                "456 -> y",
+                "x AND y -> d",
+                "x OR y -> e",
+                "x LSHIFT 2 -> f",
+                "y RSHIFT 2 -> g",
+                "NOT x -> h",
+                "NOT y -> i"
+            ];
+            let scope = {};
+
+            input.forEach((x) => scope = execute(scope, x));
+
+            expect(scope).to.eql({
+                d: 72,
+                e: 507,
+                f: 492,
+                g: 114,
+                h: 65412,
+                i: 65079,
+                x: 123,
+                y: 456
+            });
+        });
         
     });
 
