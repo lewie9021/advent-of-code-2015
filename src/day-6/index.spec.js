@@ -6,17 +6,22 @@ describe(title, function() {
     const total = _.compose(_.sum, _.map(_.sum));
 
     describe("Part 1:", function() {
+        const modes = {
+            "on": () => true,
+            "off": () => false,
+            "toggle": (x) => !x
+        };
 
         it("should evaluate 'turn on 0,0 through 999,999' as turn on every light", function() {
             const grid = createGrid(1000, 1000);
-            const result = configureLighting(grid, "turn on 0,0 through 999,999");
+            const result = configureLighting(grid, modes, "turn on 0,0 through 999,999");
             
             expect(total(result)).to.eq(1000 * 1000);
         });
 
         it("should evaluate 'toggle 0,0 through 999,0' as toggle the first 1000 lights", function() {
             const grid = createGrid(1000, 1000);
-            const result = configureLighting(grid, "toggle 0,0 through 999,0");
+            const result = configureLighting(grid, modes, "toggle 0,0 through 999,0");
 
             // Check the first row of lights are on.
             expect(_.sum(result[0])).to.eq(1000);
@@ -30,7 +35,7 @@ describe(title, function() {
 
         it("should evaluate 'turn off 499,499 through 500,500' as turn off the middle four lights.", function() {
             const grid = createGrid(1000, 1000, true);
-            const result = configureLighting(grid, "turn off 499,499 through 500,500");
+            const result = configureLighting(grid, modes, "turn off 499,499 through 500,500");
             
             // Make sure the correct lights are turned off.
             expect(result[499][499]).to.eq(false);
@@ -45,10 +50,15 @@ describe(title, function() {
     });
 
     describe("Part 2:", function() {
+        const modes = {
+            "on": () => 1,
+            "off": () => 0,
+            "toggle": (x) => x + 2
+        };
 
         it("should evaluate 'turn on 0,0 through 0,0' as turn on the first light", function() {
             const grid = createGrid(1000, 1000);
-            const result = configureLighting(grid, "turn on 0,0 through 0,0");
+            const result = configureLighting(grid, modes, "turn on 0,0 through 0,0");
 
             // Ensure the first light is on.
             expect(result[0][0]).to.eq(1);
@@ -59,7 +69,9 @@ describe(title, function() {
 
         it("should evaluate 'toggle 0,0 through 999,999' as toggle every light", function() {
             const grid = createGrid(1000, 1000);
-            const result = configureLighting(grid, "turn on 0,0 through 0,0");
+            const result = configureLighting(grid, modes, "toggle 0,0 through 999,999");
+
+            this.timeout(0);
 
             // Ensure each value is
             _.map((y) => {

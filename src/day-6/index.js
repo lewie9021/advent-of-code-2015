@@ -23,13 +23,7 @@ function parse(instruction) {
     };
 }
 
-const modes = {
-    "on": () => true,
-    "off": () => false,
-    "toggle": (x) => !x
-};
-
-export function configureLighting(grid, instructions) {
+export function configureLighting(grid, modes, instructions) {
     const {mode, pointA, pointB} = parse(instructions);
     const operation = modes[mode];
     const [x1, y1] = pointA;
