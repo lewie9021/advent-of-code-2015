@@ -33,16 +33,18 @@ export function execute(baseScope, instruction) {
     const [operation, identifier] = _.map(_.trim, split("->", instruction));
     const constant = parseInt(operation, 10);
 
-    // It's a simple value assignment.
-    if (!isNaN(constant)) {
-        scope[identifier] = wrapValue(parseInt(operation, 10), maxValue);
-
-        return scope;
-    }
-
     // Get the operator function.
     const pattern = new RegExp(`(${Object.keys(operators).join("|")})`, "g");
-    const [name] = operation.match(pattern);
+    const match = operation.match(pattern);
+
+    // Here, 'operation' is either a constant or an identifier.
+    if (!match) {
+        scope[identifier] = wrapValue(lookupValues(scope, operation)[0], maxValue);
+        
+        return scope;
+    }
+    
+    const [name] = match;
     const operator = operators[name];
     
     // Parse the values so we are working with constants.
@@ -57,6 +59,10 @@ export function execute(baseScope, instruction) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
+    let scope = {};
+
+    // Build up the scope object through each instruction.
+    input.forEach((x) => scope = execute(scope, x));
     
-    console.log("In little Bobby's kit's instructions booklet, what signal is ultimately provided to wire a?");
+    console.log("In little Bobby's kit's instructions booklet, what signal is ultimately provided to wire a?", scope["a"]);
 }
