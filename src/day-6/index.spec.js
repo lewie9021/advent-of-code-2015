@@ -44,4 +44,34 @@ describe(title, function() {
         
     });
 
+    describe("Part 2:", function() {
+
+        it("should evaluate 'turn on 0,0 through 0,0' as turn on the first light", function() {
+            const grid = createGrid(1000, 1000);
+            const result = configureLighting(grid, "turn on 0,0 through 0,0");
+
+            // Ensure the first light is on.
+            expect(result[0][0]).to.eq(1);
+
+            // Make sure all but the first light is on.
+            expect(total(result)).to.eq(1);
+        });
+
+        it("should evaluate 'toggle 0,0 through 999,999' as toggle every light", function() {
+            const grid = createGrid(1000, 1000);
+            const result = configureLighting(grid, "turn on 0,0 through 0,0");
+
+            // Ensure each value is
+            _.map((y) => {
+                _.map((x) => {
+                    expect(result[y][x]).to.eq(2);
+                }, _.range(0, 1000));
+            }, _.range(0, 1000));
+
+            // As a sanity check, ensure the total sum is 2000000.
+            expect(total(result)).to.eq(2 * 1000 * 1000);
+        });
+        
+    });
+
 });
