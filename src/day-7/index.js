@@ -22,6 +22,12 @@ function lookupValues(scope, values) {
         });
 }
 
+const maxValue = Math.pow(2, 16);
+
+function wrapValue(value, max) {
+   return ((value % max) + max) % max;
+}
+
 export function execute(baseScope, instruction) {
     const scope = _.clone(baseScope);
     const [operation, identifier] = _.map(_.trim, split("->", instruction));
@@ -29,7 +35,7 @@ export function execute(baseScope, instruction) {
 
     // It's a simple value assignment.
     if (!isNaN(constant)) {
-        scope[identifier] = parseInt(operation, 10);
+        scope[identifier] = wrapValue(parseInt(operation, 10), maxValue);
 
         return scope;
     }
@@ -43,11 +49,10 @@ export function execute(baseScope, instruction) {
     const values = lookupValues(scope, operation.replace(name, ""));
 
     // Pass the values to the operator and create / update the value in scope.
-    scope[identifier] = operator(...values);
+    scope[identifier] = wrapValue(operator(...values), maxValue);
 
     return scope;
 }
-
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");

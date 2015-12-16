@@ -18,19 +18,32 @@ describe(title, function() {
         });
 
         it("should evaluate 'x OR y -> e' as '{e: x | y}'", function() {
-            
+            expect(execute({x: 1, y: 2}, "x OR y -> e")).to.eql({
+                x: 1,
+                y: 2,
+                e: 1 | 2
+            });
         });
 
         it("should evaluate 'x LSHIFT 2 -> f' as '{f: x << 2}'", function() {
-            
+            expect(execute({x: 1}, "x LSHIFT 2 -> f")).to.eql({
+                x: 1,
+                f: 1 << 2
+            });
         });
 
         it("should evaluate 'y RSHIFT 2 -> g' as '{g: y >> 2}'", function() {
-            
+            expect(execute({x: 1}, "x RSHIFT 2 -> g")).to.eql({
+                x: 1,
+                g: 1 >> 2
+            });
         });
 
         it("should evaluate 'NOT x -> h' as '{h: ~x}' (negative numbers warp)", function() {
-            
+            expect(execute({x: 1}, "NOT x -> h")).to.eql({
+                x: 1,
+                h: 65534
+            });
         });
         
     });
