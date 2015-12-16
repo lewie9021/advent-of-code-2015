@@ -1,16 +1,20 @@
 import { expect } from "chai";
-import { title } from "./";
+import { title, execute } from "./";
 
 describe(title, function() {
 
     describe("Part 1:", function() {
 
         it("should evaluate '123 -> x' as '{x: 123}'", function() {
-            
+            expect(execute({}, "123 -> x")).to.eql({x: 123});
         });
 
         it("should evaluate 'x AND y -> d' as '{d: x & y}'", function() {
-            
+            expect(execute({x: 1, y: 2}, "x AND y -> d")).to.eql({
+                x: 1,
+                y: 2,
+                d: 1 & 2
+            });
         });
 
         it("should evaluate 'x OR y -> e' as '{e: x | y}'", function() {
