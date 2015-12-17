@@ -38,8 +38,9 @@ export function charactersInMemory(string) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
-    const characterCount = (x) => charactersInCode(x) - charactersInMemory(x);
-    const total = _.compose(_.sum, _.map(characterCount));
+    const totalPartOne = _.compose(_.sum, _.map((x) => charactersInCode(x) - charactersInMemory(x)));
+    const totalPartTwo = _.compose(_.sum, _.map((x) => charactersEscapedInMemory(x) - charactersInCode(x)));
 
-    console.log("what is the number of characters of code for string literals minus the number of characters in memory for the values of the strings in total for the entire file?", total(input));
+    console.log("What is the number of characters of code for string literals minus the number of characters in memory for the values of the strings in total for the entire file?", totalPartOne(input));
+    console.log("What is the total number of characters to represent the newly encoded strings minus the number of characters of code in each original string literal?", totalPartTwo(input));
 }
