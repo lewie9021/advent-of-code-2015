@@ -9,7 +9,13 @@ export function charactersInCode(string) {
 }
 
 export function charactersEscapedInMemory(string) {
+    const str = string
+              // Replace each bashlash with '\\'.
+              .replace(/\\/g, "\\\\")
+              // Replace each double quote with '\"'.
+              .replace(/\"/g, "\\\"");
     
+    return str.length + 2;
 }
 
 export function charactersInMemory(string) {
