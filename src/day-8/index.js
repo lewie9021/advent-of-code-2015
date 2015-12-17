@@ -8,8 +8,8 @@ export function charactersInCode() {
     
 }
 
-export function charactersInMemory() {
-    
+export function charactersInMemory(string) {
+    return string.length;
 }
 
 export function run() {
