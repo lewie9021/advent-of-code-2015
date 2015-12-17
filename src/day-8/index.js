@@ -8,6 +8,10 @@ export function charactersInCode(string) {
     return string.length;
 }
 
+export function charactersEscapedInMemory(string) {
+    
+}
+
 export function charactersInMemory(string) {
     const pattern = /(\\x([0-9]|[a-f]){2})/g;
     const str = string

@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, charactersInCode, charactersInMemory } from "./";
+import { title, charactersInCode, charactersInMemory, charactersEscapedInMemory } from "./";
 
 describe(title, function() {
 
@@ -53,6 +53,30 @@ describe(title, function() {
 
         });
 
+    });
+
+    describe("Part 2:", function() {
+
+        describe("charactersEscapedInMemory", function() {
+
+            it(`should evaluate '""' as 6 characters`, function() {
+                expect(charactersEscapedInMemory("\"\"")).to.eq(6);
+            });
+
+            it(`should evaluate '"abc"' as 9 characters`, function() {
+               expect(charactersEscapedInMemory("\"abc\"")).to.eq(9); 
+            });
+
+            it(`should evaluate '"aaa\\"aaa"' as 16 characters`, function() {
+                expect(charactersEscapedInMemory("\"aaa\\\"aaa\"")).to.eq(16);
+            });
+
+            it(`should evaluate '"\\x27"' as 11 character`, function() {
+                expect(charactersEscapedInMemory("\"\\x27\"")).to.eq(11);
+            });
+            
+        });
+        
     });
 
 });
