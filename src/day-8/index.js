@@ -9,7 +9,20 @@ export function charactersInCode(string) {
 }
 
 export function charactersInMemory(string) {
-    return string.length;
+    const pattern = /(\\x([0-9]|[a-z]){2})/;
+    const str = string
+              // Replace each '\x' plus two Hexadecimal characters with the Unicode representation.
+              .replace(pattern, (match) => {
+                  const code = parseInt(match.substr(2), 16);
+                  
+                  return String.fromCharCode(code);
+              })
+              // Replace each '\"' with a double quote.
+              .replace(/\\"/, "\"")
+              // Replace each '\\' with a backslash.
+              .replace(/\\/, "\\");
+
+    return str.length - 2;
 }
 
 export function run() {

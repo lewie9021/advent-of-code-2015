@@ -43,6 +43,14 @@ describe(title, function() {
                 expect(charactersInMemory("\"\\x27\"")).to.eq(1);
             });
 
+            it(`should evaulate '"\""' as 1 character`, function() {
+                expect(charactersInMemory("\"\"\"")).to.eq(1);
+            });
+            
+            it(`should evaluate '"\\"' as 1 character`, function() {
+                expect(charactersInMemory("\"\\\\\"")).to.eq(1);
+            });
+
         });
 
     });
