@@ -9,7 +9,7 @@ export function charactersInCode(string) {
 }
 
 export function charactersInMemory(string) {
-    const pattern = /(\\x([0-9]|[a-z]){2})/;
+    const pattern = /(\\x([0-9]|[a-f]){2})/g;
     const str = string
               // Replace each '\x' plus two Hexadecimal characters with the Unicode representation.
               .replace(pattern, (match) => {
@@ -18,16 +18,18 @@ export function charactersInMemory(string) {
                   return String.fromCharCode(code);
               })
               // Replace each '\"' with a double quote.
-              .replace(/\\"/, "\"")
+              .replace(/\\"/g, "\"")
               // Replace each '\\' with a backslash.
-              .replace(/\\/, "\\");
-
+              .replace(/\\\\/g, "\\");
+    
     return str.length - 2;
 }
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
-    const input = FS.readFileSync(inputPath, "utf-8").trim();
+    const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
+    const characterCount = (x) => charactersInCode(x) - charactersInMemory(x);
+    const total = _.compose(_.sum, _.map(characterCount));
 
-    console.log("what is the number of characters of code for string literals minus the number of characters in memory for the values of the strings in total for the entire file?");
+    console.log("what is the number of characters of code for string literals minus the number of characters in memory for the values of the strings in total for the entire file?", total(input));
 }
