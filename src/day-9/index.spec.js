@@ -39,7 +39,10 @@ describe(title, function() {
                 const locations = getLocations(this.distances);
                 
                 expect(Object.keys(locations).length).to.eq(3);
-                expect(locations).to.have.keys("London", "Dublin", "Belfast");
+                expect(locations).to.have.keys("0", "1", "2");
+                expect(locations[0]).to.eq("London");
+                expect(locations[1]).to.eq("Dublin");
+                expect(locations[2]).to.eq("Belfast");
             });
             
         });

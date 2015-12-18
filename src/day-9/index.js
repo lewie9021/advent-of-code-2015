@@ -4,14 +4,14 @@ import _ from "lodash-fp";
 
 export const title = "Day 9: All in a Single Night";
 
-export function getLocations(routes) {
+export function getLocations(distances) {
     const locations = _.compose(_.unique, _.map(_.get("from")));
 
-    return _.reduce((map, route, index) => {
-        map[route] = index;
+    return _.reduce((map, location, index) => {
+        map[index] = location;
         
         return map;
-    }, {}, locations(routes));
+    }, {}, locations(distances));
 }
 
 export function getDistances(input) {
@@ -29,11 +29,10 @@ export function getDistances(input) {
     return distances(input);
 }
 
-
-
 export function shortestDistance(input) {
     const distances = getDistances(input);
     const locations = getLocations(distances);
+    const locationIDs = Object.keys(locations);
 }
 
 export function run() {
