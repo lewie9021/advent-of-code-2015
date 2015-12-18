@@ -29,6 +29,10 @@ export function getDistances(input) {
     return distances(input);
 }
 
+export function getRoutes() {
+    
+}
+
 export function shortestDistance(input) {
     const distances = getDistances(input);
     const locations = getLocations(distances);

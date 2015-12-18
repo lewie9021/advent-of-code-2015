@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, getDistances, getLocations, shortestDistance } from "./";
+import { title, getDistances, getLocations, getRoutes, shortestDistance } from "./";
 
 describe(title, function() {
 
@@ -43,6 +43,35 @@ describe(title, function() {
                 expect(locations[0]).to.eq("London");
                 expect(locations[1]).to.eq("Dublin");
                 expect(locations[2]).to.eq("Belfast");
+            });
+            
+        });
+
+        describe("getRoutes", function() {
+
+            beforeEach(function() {
+                this.distances = getDistances(this.input);
+                this.locations = getLocations(this.distances);
+            });
+            
+            it("should return an array of permutations without repetition", function() {
+                const locationIDs = Object.keys(this.locations);
+                const routes = getRoutes(locationIDs);
+
+                expect(routes.length).to.eq(6);
+
+                // London -> Dublin -> Belfast
+                expect(routes).to.contain([0, 1, 2]);
+                // London -> Belfast -> Dublin
+                expect(routes).to.contain([0, 2, 1]);
+                // Dublin -> London -> Belfast
+                expect(routes).to.contain([1, 0, 2]);
+                // Dublin -> Belfast -> London
+                expect(routes).to.contain([1, 2, 0]);
+                // Belfast -> London -> Dublin
+                expect(routes).to.contain([2, 0, 1]);
+                // Belfast -> Dublin -> London
+                expect(routes).to.contain([2, 1, 0]);
             });
             
         });
