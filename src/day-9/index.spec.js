@@ -1,6 +1,14 @@
 import _ from "lodash-fp";
 import { expect } from "chai";
-import { title, getDistances, getLocations, getRoutes, calculateDistances, shortestDistance } from "./";
+import {
+    title,
+    getDistances,
+    getLocations,
+    getRoutes,
+    calculateDistances,
+    longestDistance,
+    shortestDistance
+} from "./";
 
 describe(title, function() {
 
@@ -110,6 +118,16 @@ describe(title, function() {
                 const result = shortestDistance(this.input);
 
                 expect(result).to.eq(605);
+            });
+            
+        });
+
+        describe("longestDistance", function() {
+            
+            it("should return the longest distance", function() {
+                const result = longestDistance(this.input);
+
+                expect(result).to.eq(982);
             });
             
         });

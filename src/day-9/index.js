@@ -68,9 +68,16 @@ export function shortestDistance(input) {
     return _.first(distances.sort());
 }
 
+export function longestDistance(input) {
+    const distances = calculateDistances(input);
+
+    return _.last(distances.sort());
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
     
     console.log("What is the distance of the shortest route?", shortestDistance(input));
+    console.log("What is the distance of the longest route?", longestDistance(input));
 }
