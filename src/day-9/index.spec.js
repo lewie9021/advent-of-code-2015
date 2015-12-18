@@ -1,6 +1,6 @@
 import _ from "lodash-fp";
 import { expect } from "chai";
-import { title, getDistances, getLocations, getRoutes, shortestDistance } from "./";
+import { title, getDistances, getLocations, getRoutes, calculateDistances, shortestDistance } from "./";
 
 describe(title, function() {
 
@@ -77,6 +77,29 @@ describe(title, function() {
                 expect(findRoute(routes, [2, 0, 1]).length).to.eq(1);
                 // Belfast -> Dublin -> London
                 expect(findRoute(routes, [2, 1, 0]).length).to.eq(1);
+            });
+            
+        });
+
+        describe("calculateDistances", function() {
+
+            it("should return an array of distances", function() {
+                const distances = calculateDistances(this.input);
+                
+                expect(distances).to.eql([
+                    // London -> Dublin -> Belfast
+                    605,
+                    // London -> Belfast -> Dublin
+                    659,
+                    // Dublin -> London -> Belfast
+                    982,
+                    // Dublin -> Belfast -> London
+                    659,
+                    // Belfast -> London -> Dublin
+                    982,
+                    // Belfast -> Dublin -> London
+                    605
+                ]);
             });
             
         });

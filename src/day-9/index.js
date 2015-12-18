@@ -42,12 +42,12 @@ export function getRoutes(locationIDs, subRoute = [], result = []) {
     }, result, locationIDs);
 }
 
-export function shortestDistance(input) {
+export function calculateDistances(input) {
     const distances = getDistances(input);
     const locations = getLocations(distances);
     const locationIDs = _.map((x) => parseInt(x, 10), Object.keys(locations));
     const routes = getRoutes(locationIDs);
-    const totalDistances = _.map((route) => {
+    return _.map((route) => {
         return _.reduce((total, location, index) => {
             const from = locations[route[index]];
             const to = locations[route[index + 1]];
@@ -60,8 +60,12 @@ export function shortestDistance(input) {
             return total += match.distance;
         }, 0, route);
     }, routes);
+}
 
-    return _.first(totalDistances.sort());
+export function shortestDistance(input) {
+    const distances = calculateDistances(input);
+
+    return _.first(distances.sort());
 }
 
 export function run() {
