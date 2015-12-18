@@ -66,7 +66,7 @@ export function shortestDistance(input) {
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
-    const input = FS.readFileSync(inputPath, "utf-8").trim();
+    const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
     
-    console.log("What is the distance of the shortest route?");
+    console.log("What is the distance of the shortest route?", shortestDistance(input));
 }
