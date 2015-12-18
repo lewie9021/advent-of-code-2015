@@ -14,26 +14,26 @@ export function getLocations(routes) {
     }, {}, locations(routes));
 }
 
-export function getRoutes(distances) {
-    const route = (string) => {
-        const values = string
-                  .replace("to", "")
-                  .match(/(\w+|\d+)/g);
-        const distance = parseInt(values[2]);
+export function getDistances(input) {
+    const parse = (string) => {
+        const [from,, to, value] = string.match(/(\w+|\d+)/g);
+        const distance = parseInt(value);
 
         return [
-            {from: values[0], to: values[1], distance},
-            {from: values[1], to: values[0], distance}
+            {from, to, distance},
+            {from: to, to: from, distance}
         ];
     };
-    const routes = _.compose(_.flatten, _.map(route));
+    const distances = _.compose(_.flatten, _.map(parse));
 
-    return routes(distances);
+    return distances(input);
 }
 
-export function shortestDistance(distances) {
-    const routes = getRoutes(distances);
-    const locations = getLocations(routes);
+
+
+export function shortestDistance(input) {
+    const distances = getDistances(input);
+    const locations = getLocations(distances);
 }
 
 export function run() {
