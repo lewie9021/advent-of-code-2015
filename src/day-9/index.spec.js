@@ -81,6 +81,16 @@ describe(title, function() {
             
         });
 
+        describe("shortestDistance", function() {
+            
+            it("should return the shortest distance", function() {
+                const result = shortestDistance(this.input);
+
+                expect(result).to.eq(605);
+            });
+            
+        });
+
     });
 
 });
