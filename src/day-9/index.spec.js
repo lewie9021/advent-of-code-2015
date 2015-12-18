@@ -1,3 +1,4 @@
+import _ from "lodash-fp";
 import { expect } from "chai";
 import { title, getDistances, getLocations, getRoutes, shortestDistance } from "./";
 
@@ -54,24 +55,28 @@ describe(title, function() {
                 this.locations = getLocations(this.distances);
             });
             
-            it("should return an array of permutations without repetition", function() {
-                const locationIDs = Object.keys(this.locations);
+            it("should return an array of combinations without repetition", function() {
+                const locationIDs = _.map((x) => parseInt(x, 10), Object.keys(this.locations));
                 const routes = getRoutes(locationIDs);
+                function findRoute(routes, values) {
+                    return _.filter((route) => _.isEqual(values, route), routes);
+                }
 
+                // Ensure we have the correct amount of routes.
                 expect(routes.length).to.eq(6);
 
                 // London -> Dublin -> Belfast
-                expect(routes).to.contain([0, 1, 2]);
+                expect(findRoute(routes, [0, 1, 2]).length).to.eq(1);
                 // London -> Belfast -> Dublin
-                expect(routes).to.contain([0, 2, 1]);
+                expect(findRoute(routes, [0, 2, 1]).length).to.eq(1);
                 // Dublin -> London -> Belfast
-                expect(routes).to.contain([1, 0, 2]);
+                expect(findRoute(routes, [1, 0, 2]).length).to.eq(1);
                 // Dublin -> Belfast -> London
-                expect(routes).to.contain([1, 2, 0]);
+                expect(findRoute(routes, [1, 2, 0]).length).to.eq(1);
                 // Belfast -> London -> Dublin
-                expect(routes).to.contain([2, 0, 1]);
+                expect(findRoute(routes, [2, 0, 1]).length).to.eq(1);
                 // Belfast -> Dublin -> London
-                expect(routes).to.contain([2, 1, 0]);
+                expect(findRoute(routes, [2, 1, 0]).length).to.eq(1);
             });
             
         });

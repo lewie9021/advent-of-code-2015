@@ -29,14 +29,23 @@ export function getDistances(input) {
     return distances(input);
 }
 
-export function getRoutes() {
-    
+export function getRoutes(locationIDs, subRoute = [], result = []) {
+    if (!locationIDs.length)
+        return result.concat([subRoute]);
+
+    // Loop through each ID and call getRoute with current value + rest.
+    return _.reduce((routes, locationID) => {
+        const rest = _.filter((id) => id !== locationID, locationIDs);
+
+        // Append any complete routes to the returned value.
+        return routes.concat(getRoutes(rest, subRoute.concat(locationID), result));
+    }, result, locationIDs);
 }
 
 export function shortestDistance(input) {
     const distances = getDistances(input);
     const locations = getLocations(distances);
-    const locationIDs = Object.keys(locations);
+    const locationIDs = _.map((x) => parseInt(x, 10), Object.keys(locations));
 }
 
 export function run() {
