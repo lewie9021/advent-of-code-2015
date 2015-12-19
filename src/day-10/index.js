@@ -22,12 +22,19 @@ function groupByDigit(sequence) {
 export function lookSay(sequence) {
     const say = (group) => `${group.length}${group[0]}`;
    
-    return _.compose(_.parseInt(10), join(""), _.map(say), groupByDigit, (x) => x.toString())(sequence);
+    return _.compose(join(""), _.map(say), groupByDigit, split(""))(sequence);
+}
+
+function nthSequence(n, sequence, i = 0) {
+    if (i >= n)
+        return sequence;
+
+    return nthSequence(n, lookSay(sequence), i + 1);
 }
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
     
-    console.log("What is the length of the result?");
+    console.log("What is the length of the result?", nthSequence(40, input).length);
 }
