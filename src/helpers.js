@@ -2,6 +2,7 @@ import __ from "lodash";
 import _ from "lodash-fp";
 
 export const split = _.curry((delimiter, str) => str.split(delimiter));
+export const join = _.curry((delimiter, str) => str.join(delimiter));
 
 export function log(x) {
     console.log(x);
