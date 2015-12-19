@@ -47,17 +47,17 @@ export function calculateDistances(input) {
     const locations = getLocations(distances);
     const locationIDs = _.map((x) => parseInt(x, 10), Object.keys(locations));
     const routes = getRoutes(locationIDs);
+
     return _.map((route) => {
         return _.reduce((total, location, index) => {
+            if (index > route.length - 2)
+                return total;
+            
             const from = locations[route[index]];
             const to = locations[route[index + 1]];
+            const [{distance}] = _.filter((x) => x.from  == from && x.to == to, distances);
 
-            if (!to)
-                return total;
-
-            const [match] = _.filter((x) => x.from  == from && x.to == to, distances);
-
-            return total += match.distance;
+            return total += distance;
         }, 0, route);
     }, routes);
 }
