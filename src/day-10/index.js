@@ -10,10 +10,13 @@ function groupByDigit(sequence) {
         const digit = parseInt(char, 10);
         const group = _.last(groups);
 
-        if (!group || group[0] !== digit)
-            return groups.concat([[digit]]);
+        if (!group || group[0] !== digit) {
+            groups.push([digit]);
+            
+            return groups;
+        }
 
-        groups[groups.length - 1] = group.concat(digit);
+        group.push(digit);
         
         return groups;
     }, [], sequence);
@@ -21,8 +24,9 @@ function groupByDigit(sequence) {
 
 export function lookSay(sequence) {
     const say = (group) => `${group.length}${group[0]}`;
+    const combine = (groups) => _.reduce((sequence, group) => sequence + say(group), "", groups);
    
-    return _.compose(join(""), _.map(say), groupByDigit, split(""))(sequence);
+    return _.compose(combine, groupByDigit)(sequence);
 }
 
 function nthSequence(n, sequence, i = 0) {
@@ -36,5 +40,6 @@ export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
     
-    console.log("What is the length of the result?", nthSequence(40, input).length);
+    console.log("What is the length of the result after 40 times?", nthSequence(40, input).length);
+    console.log("What is the length of the result after 50 times?", nthSequence(50, input).length);
 }
