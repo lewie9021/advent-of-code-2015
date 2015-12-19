@@ -18,7 +18,7 @@ describe(title, function() {
         });
 
         it("should evaluate '1211' as '111221'", function() {
-            expect(lookSay(1211)).to.eql(11221);
+            expect(lookSay(1211)).to.eql(111221);
         });
 
         it("should evaluate '111221' as '312211'", function() {
