@@ -52,7 +52,7 @@ export function calculateSeating(list) {
         return _.reduce((total, guest, index) => {
             // Get an array of people (left, current, and right).
             const [left, current, right] = _.map((offset) => {
-                return guests[arrangement[warpValue(index + offset, 4)]];
+                return guests[arrangement[warpValue(index + offset, guestIDs.length)]];
             }, [-1, 0, 1]);
             // Looks through the list to find the matching guest and neighbour.
             const findInList = _.curry((x, a, b) => {
@@ -63,13 +63,14 @@ export function calculateSeating(list) {
             return total + (getValue(left) + getValue(right));
         }, 0, arrangement);
     }, arrangements);
-    
-    return _.last(cost.sort());
+
+    return _.last(cost.sort((a,b) => a - b));
 }
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
-    
-    console.log("What is the total change in happiness for the optimal seating arrangement?");
+    const happinessList = parse(input);
+
+    console.log("What is the total change in happiness for the optimal seating arrangement?", calculateSeating(happinessList));
 }
