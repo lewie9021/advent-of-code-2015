@@ -4,18 +4,21 @@ import _ from "lodash-fp";
 
 export const title = "Day 12: JSAbacusFramework.io";
 
-function visit(node) {
+function visit(node, customizer = _.constant(true)) {
+    if (!customizer(node))
+        return 0;
+
     if (_.isArray(node))
-        return _.map((x) => visit(x), node);
+        return _.map((x) => visit(x, customizer), node);
 
     if (_.isObject(node))
-        return _.map((k) => visit(node[k]), Object.keys(node));
+        return _.map((k) => visit(node[k], customizer), Object.keys(node));
     
     return node;
 }
 
-function reduceDeep(collection, func, start) {
-    const values = _.flattenDeep(visit(collection));
+function reduceDeep(collection, func, start, customizer) {
+    const values = _.flattenDeep(visit(collection, customizer));
     let value = start;
 
     for (let i = 0; i < values.length; i += 1) {
@@ -25,8 +28,8 @@ function reduceDeep(collection, func, start) {
     return value;
 }
 
-export function total(collection) {
-    return reduceDeep(collection, _.add, 0);
+export function total(collection, customizer) {
+    return reduceDeep(collection, _.add, 0, customizer);
 }
 
 export function run() {
