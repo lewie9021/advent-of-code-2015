@@ -7,6 +7,8 @@ export const join = _.curry((delimiter, str) => str.join(delimiter));
 
 export const reverse = (x) => x.reverse();
 
+export const warpValue = (x, max) => ((x % max) + max) % max;
+
 export function log(x) {
     console.log(x);
 

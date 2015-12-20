@@ -1,6 +1,7 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
+import { warpValue } from "../helpers";
 
 export const title = "Day 13: Knights of the Dinner Table";
 
@@ -25,10 +26,6 @@ export function getSeating(guestIDs, subSeating = [], result = []) {
         // Append any complete seating arrangements to the returned value.
         return seating.concat(getSeating(rest, subSeating.concat(guestID), result));
     }, result, guestIDs);
-}
-
-function warpValue(value, max) {
-   return ((value % max) + max) % max;
 }
 
 export function calculateSeating(list) {
