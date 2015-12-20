@@ -29,7 +29,17 @@ export function getSeating(guestIDs, subSeating = [], result = []) {
 }
 
 export function parse(input) {
-    
+    return _.map((sentence) => {
+        const [guest, neighbour] = sentence.match(/[A-Z]{1}[a-z]+/g);
+        const [adjustment, value] = sentence.match(/(gain|lose)|(\d+)/g);
+        const happiness = value * (adjustment == "gain" ? 1 : -1);
+
+        return {
+            guest,
+            neighbour,
+            value: happiness
+        };
+    }, input);
 }
 
 export function calculateSeating(list) {
