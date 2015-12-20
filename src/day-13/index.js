@@ -15,7 +15,7 @@ function getGuests(list) {
     }, {}, guests(list));
 }
 
-export function getSeating(guestIDs, subSeating = [], result = []) {
+function getSeating(guestIDs, subSeating = [], result = []) {
     if (!guestIDs.length)
         return result.concat([subSeating]);
 
@@ -26,6 +26,16 @@ export function getSeating(guestIDs, subSeating = [], result = []) {
         // Append any complete seating arrangements to the returned value.
         return seating.concat(getSeating(rest, subSeating.concat(guestID), result));
     }, result, guestIDs);
+}
+
+function getMyHappiness(name, list) {
+    const guests = getGuests(list);
+    const happiness = _.map((guest) => [
+        `${guest} would gain 0 happiness units by sitting next to ${name}`,
+        `${name} would gain 0 happiness units by sitting next to ${guest}`
+    ], guests);
+
+    return _.flatten(happiness);
 }
 
 export function parse(input) {
@@ -70,7 +80,9 @@ export function calculateSeating(list) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
-    const happinessList = parse(input);
+    const list = parse(input);
+    const listWithMe = parse(input.concat(getMyHappiness("Lewis", list)));
 
-    console.log("What is the total change in happiness for the optimal seating arrangement?", calculateSeating(happinessList));
+    console.log("What's the total change in happiness for the optimal seating arrangement?", calculateSeating(list));
+    console.log("What's the total change in happiness for the optimal seating arrangement that actually includes yourself?", calculateSeating(listWithMe));
 }
