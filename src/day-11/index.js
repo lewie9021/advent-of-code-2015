@@ -1,6 +1,7 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
+import { join, split, reverse } from "../helpers";
 
 export const title = "Day 11: Corporate Policy";
 
@@ -36,7 +37,25 @@ export function validate(password) {
 }
 
 export function nextPassword(oldPassword) {
+    const increment = (x) => {
+        const charMap = {"a": 97, "z": 122};
+        const difference = charMap["z"] - charMap["a"];
+        let increment = false;
+        
+        return _.reduce((codes, l) => {
+            const currentCode = l.charCodeAt(0);
+            const code = (increment + currentCode - charMap["a"]) % difference;
+            
+            codes.push(code + charMap["a"]);
+            increment = (currentCode == charMap["z"]);
+
+            return codes;
+        }, [], x);
+    };
+    const toString = (x) => _.reduce((str, l) => str + String.fromCharCode(l), "", x);
+    const next = _.compose(toString, reverse, increment, reverse, split(""));
     
+    return next(oldPassword);
 }
 
 export function run() {

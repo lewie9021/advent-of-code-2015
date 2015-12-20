@@ -29,13 +29,17 @@ describe(title, function() {
 
         });
 
-        xdescribe("nextPassword", function() {
+        describe("nextPassword", function() {
 
-            it("should return 'abcdffaa' as the next password after 'abcdefgh'", function() {
+            it("should return 'deffaacz' as the next password after 'deffaaba'", function() {
+                expect(nextPassword("deffaabz")).to.eq("deffaaca");
+            });
+            
+            xit("should return 'abcdffaa' as the next password after 'abcdefgh'", function() {
                 expect(nextPassword("abcdefgh")).to.eq("abcdffaa");
             });
 
-            it("should return 'ghjaabcc' as the next password after 'ghijklmn'", function() {
+            xit("should return 'ghjaabcc' as the next password after 'ghijklmn'", function() {
                 expect(nextPassword("ghijklmn")).to.eq("ghjaabcc");
             });
 
