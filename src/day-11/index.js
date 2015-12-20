@@ -69,6 +69,8 @@ export function nextPassword(oldPassword) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
+    const firstPassword = nextPassword(input);
     
-    console.log("What should Santa's next password be?", nextPassword(input));
+    console.log("What should Santa's next password be?", firstPassword);
+    console.log("Santa's password expired again. What's the next one?", nextPassword(firstPassword));
 }
