@@ -16,6 +16,10 @@ function chunks(collection, size = 0) {
 }
 
 export function validate(password) {
+    // Passwords may not contain the letters i, o, or l.
+    if (password.match(/i|o|l/))
+        return false;
+
     const charCodes = _.map((l) => l.charCodeAt(0), password);
     
     // Passwords must include one increasing straight of at least three letters.
@@ -25,37 +29,41 @@ export function validate(password) {
         return _.isEqual(straight, expected);
     }, chunks(charCodes, 3));
 
-    // Passwords may not contain the letters i, o, or l.
-    const blacklist = ["i", "o", "l"];
-    const getMatches = _.curry((list, string) => _.filter((x) => _.includes(x, string), list));
-    const blacklistLetters = _.compose(_.gte(1), _.get("length"), getMatches(blacklist));
-
+    if (!straights.length)
+        return false;
+    
     // Passwords must contain at least two different, non-overlapping pairs of letters.
-    const pairs = _.filter(([a, b]) => a === b, chunks(charCodes, 2));
-
-    return straights.length >= 1 && !blacklistLetters(password) && pairs.length >= 2;
+    const pairs = password.match(/(.)\1/g) || [];
+    
+    return pairs.length >= 2;
 }
 
 export function nextPassword(oldPassword) {
     const increment = (x) => {
         const charMap = {"a": 97, "z": 122};
-        const difference = charMap["z"] - charMap["a"];
-        let increment = false;
+        const difference = charMap["z"] - charMap["a"] + 1;
+        let increment = true;
         
         return _.reduce((codes, l) => {
             const currentCode = l.charCodeAt(0);
-            const code = (increment + currentCode - charMap["a"]) % difference;
+            const code = ((currentCode + increment) - charMap["a"]) % difference;
             
             codes.push(code + charMap["a"]);
-            increment = (currentCode == charMap["z"]);
+            increment = (code === 0) && increment;
 
             return codes;
         }, [], x);
     };
     const toString = (x) => _.reduce((str, l) => str + String.fromCharCode(l), "", x);
     const next = _.compose(toString, reverse, increment, reverse, split(""));
+
+    let newPassword = next(oldPassword);
     
-    return next(oldPassword);
+    while (!validate(newPassword)) {
+        newPassword = next(newPassword);
+    }
+    
+    return newPassword;
 }
 
 export function run() {

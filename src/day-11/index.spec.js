@@ -27,19 +27,24 @@ describe(title, function() {
                 expect(validate("ghjaabcc")).to.eq(true);
             });
 
+            it("should evaluate 'abcdeggg' as invalid", function() {
+                expect(validate("abcdeggg")).to.eq(false);
+            });
+
         });
 
         describe("nextPassword", function() {
-
+            this.timeout(0);
+            
             it("should return 'deffaacz' as the next password after 'deffaaba'", function() {
                 expect(nextPassword("deffaabz")).to.eq("deffaaca");
             });
             
-            xit("should return 'abcdffaa' as the next password after 'abcdefgh'", function() {
+            it("should return 'abcdffaa' as the next password after 'abcdefgh'", function() {
                 expect(nextPassword("abcdefgh")).to.eq("abcdffaa");
             });
 
-            xit("should return 'ghjaabcc' as the next password after 'ghijklmn'", function() {
+            it("should return 'ghjaabcc' as the next password after 'ghijklmn'", function() {
                 expect(nextPassword("ghijklmn")).to.eq("ghjaabcc");
             });
 
