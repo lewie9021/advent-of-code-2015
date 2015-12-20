@@ -70,5 +70,5 @@ export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
     
-    console.log("What should Santa's next password be?");
+    console.log("What should Santa's next password be?", nextPassword(input));
 }
