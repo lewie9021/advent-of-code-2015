@@ -28,6 +28,10 @@ export function getSeating(guestIDs, subSeating = [], result = []) {
     }, result, guestIDs);
 }
 
+export function parse(input) {
+    
+}
+
 export function calculateSeating(list) {
     const guests = getGuests(list);
     const guestIDs = _.map((x) => parseInt(x, 10), Object.keys(guests));
