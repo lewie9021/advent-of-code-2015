@@ -31,11 +31,11 @@ describe(title, function() {
 
         xdescribe("nextPassword", function() {
 
-            it("should return the next password after 'abcdefgh' as 'abcdffaa'", function() {
+            it("should return 'abcdffaa' as the next password after 'abcdefgh'", function() {
                 expect(nextPassword("abcdefgh")).to.eq("abcdffaa");
             });
 
-            it("should return the next password after 'ghijklmn' as 'ghjaabcc'", function() {
+            it("should return 'ghjaabcc' as the next password after 'ghijklmn'", function() {
                 expect(nextPassword("ghijklmn")).to.eq("ghjaabcc");
             });
 
