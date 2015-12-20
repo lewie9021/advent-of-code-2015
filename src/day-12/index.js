@@ -35,6 +35,13 @@ export function total(collection, customizer) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.json");
     const input = JSON.parse(FS.readFileSync(inputPath, "utf-8"));
+    const customizer = (node) => {
+        if (_.isPlainObject(node))
+            return !_.includes("red", node);
+        
+        return true;
+    };
     
-    console.log("What is the sum of all numbers in the document?", total(input));
+    console.log("What's the sum of all the numbers?", total(input));
+    console.log("What's the sum of all numbers (ignoring object nodes with the value 'red')?", total(input, customizer));
 }
