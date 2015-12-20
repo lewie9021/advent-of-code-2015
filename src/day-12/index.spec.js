@@ -29,6 +29,14 @@ describe(title, function() {
             expect(total({a: {b: [1, 2, 3], c: {d: [3, 2, 1]}}})).to.eq(12);
         });
 
+        it(`should evaluate '{a: "hello", b: "world"}' as 0`, function() {
+            expect(total({a: "hello", b: "world"})).to.eq(0);
+        });
+        
+        it(`should evaluate '{a: "hello", b: [1, "world", 3]}' as 4`, function() {
+            expect(total({a: "hello", b: [1, "world", 3]})).to.eq(4);
+        });
+
     });
 
 });
