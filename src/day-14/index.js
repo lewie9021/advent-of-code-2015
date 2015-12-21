@@ -19,17 +19,24 @@ export function race(descriptions, duration) {
 
     if (!_.isNumber(duration))
         throw new Error("You must provide duration time.");
+
+    const participants = _.map(reindeer, descriptions);
     
-    return _.map((description) => {
-        const {name, distance, next} = reindeer(description);
+    _.times((second) => {
+        _.forEach((x) => x.next(), participants);
+
+        const learderboard = _.sortBy(_.invoke("distance"), participants);
+        const furthest = _.first(learderboard).distance();
+        const leaders = _.filter(({distance}) => _.isEqual(distance(), furthest), learderboard);
         
-        _.times(next, duration);
-        
-        return {
-            name: name(),
-            distance: distance()
-        };
-    }, descriptions);
+        _.forEach((x) => x.award(), leaders);
+    }, duration);
+
+    return _.map(({name, distance, score}) => ({
+        name: name(),
+        distance: distance(),
+        score: score()
+    }), participants);
 }
 
 export function reindeer(description) {
@@ -39,10 +46,13 @@ export function reindeer(description) {
     const {name, speed, flyTime, restTime} = description;
     let steps = 0;
     let distance = 0;
+    let score = 0;
 
     return {
         name: () => name,
         distance: () => distance,
+        score: () => score,
+        award: () => score += 1,
         next: () => {
             if (steps % (flyTime + restTime) < flyTime)
                 distance += speed;
@@ -56,7 +66,7 @@ export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
     const descriptions = parse(input);
-    const winner = _.compose(_.get("distance"), _.last, _.sortBy("distance"));;
+    const winner = _.compose(_.get("distance"), _.last, _.sortBy("distance"));
     
     console.log("After exactly 2503 seconds, what distance has the winning reindeer traveled?", winner(race(descriptions, 2503)));
 }

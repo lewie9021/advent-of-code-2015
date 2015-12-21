@@ -61,7 +61,27 @@ describe(title, function() {
                 expect(() => race([])).to.throw("You must provide duration time.");
             });
 
-            it("should return an array of participants with their name and distance covered", function() {
+            it("should increment the score of the leader each second", function() {
+                const input = [
+                    "Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds."
+                ];
+                const [vixen] = race(parse(input), 10);
+                
+                expect(vixen.score).to.eq(10);
+            });
+
+            it("should award a point to multiple leader every second if there's a tie", function() {
+                const input = [
+                    "Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds.",
+                    "Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds."
+                ];
+                const [vixenA, vixenB] = race(parse(input), 10);
+                
+                expect(vixenA.score).to.eq(10);
+                expect(vixenB.score).to.eq(10);
+            });
+            
+            it("should return an array of participants with their name, distance, and score", function() {
                 const input = [
                     "Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds.",
                     "Rudolph can fly 3 km/s for 15 seconds, but then must rest for 28 seconds."
@@ -72,13 +92,17 @@ describe(title, function() {
                 expect(result).to.be.an("array");
                 expect(result[0]).to.eql({
                     name: vixen.name,
-                    distance: vixen.speed * Math.min(vixen.flyTime, 10)
+                    distance: vixen.speed * Math.min(vixen.flyTime, 10),
+                    score: 10
                 });
                 expect(result[1]).to.eql({
                     name: rudolph.name,
-                    distance: rudolph.speed * Math.min(rudolph.flyTime, 10)
+                    distance: rudolph.speed * Math.min(rudolph.flyTime, 10),
+                    score: 0
                 });
             });
+
+            
             
         });
         
@@ -133,6 +157,38 @@ describe(title, function() {
 
             });
 
+            describe("score", function() {
+
+                it("should initially return 0 if 'award' has never been called", function() {
+                    const result = reindeer(this.example);
+
+                    expect(result.score()).to.eq(0);
+                });
+
+                it("should return a value equal to the number of times 'award' is called", function() {
+                    const result = reindeer(this.example);
+
+                    _.times(result.award, 5);
+                    
+                    expect(result.score()).to.eq(5);
+                });
+
+            });
+
+            describe("award", function() {
+
+                it("should increment the score by 1", function() {
+                    const result = reindeer(this.example);
+
+                    expect(result.score()).to.eq(0);
+                    
+                    result.award();
+                    
+                    expect(result.score()).to.eq(1);
+                });
+
+            });
+
             describe("next", function() {
 
                 it("should increment the distance by the value of 'speed'", function() {
@@ -173,6 +229,16 @@ describe(title, function() {
             
         });
 
+    });
+
+    describe("Part 2:", function() {
+
+        describe("race", function() {
+
+            
+            
+        });
+        
     });
 
 });
