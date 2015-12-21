@@ -13,6 +13,25 @@ export function parse(input) {
     }, input);
 }
 
+export function startRace(descriptions, duration) {
+    if (!_.isArray(descriptions))
+        throw new Error("You must provide an array of descriptions.");
+
+    if (!_.isNumber(duration))
+        throw new Error("You must provide duration time.");
+    
+    return _.map((description) => {
+        const {name, distance, next} = reindeer(description);
+        
+        _.times(next, duration);
+        
+        return {
+            name: name(),
+            distance: distance()
+        };
+    }, descriptions);
+}
+
 export function reindeer(description) {
     if (!_.isPlainObject(description))
         throw new Error("You must provide a description object.");
