@@ -64,10 +64,10 @@ export function reindeer(description) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
-    const descriptions = parse(input);
+    const participants = race(parse(input), 2503);
     const furthest = _.compose(_.get("distance"), _.last, _.sortBy("distance"));
     const bestScore = _.compose(_.get("score"), _.last, _.sortBy("score"));
     
-    console.log("After exactly 2503 seconds, what distance has the winning reindeer traveled?", furthest(race(descriptions, 2503)));
-    console.log("After exactly 2503 seconds, how many points does the winning reindeer have?", bestScore(race(descriptions, 2503)));
+    console.log("After exactly 2503 seconds, what distance has the winning reindeer traveled?", furthest(participants));
+    console.log("After exactly 2503 seconds, how many points does the winning reindeer have?", bestScore(participants));
 }
