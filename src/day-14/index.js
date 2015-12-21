@@ -13,7 +13,7 @@ export function parse(input) {
     }, input);
 }
 
-export function startRace(descriptions, duration) {
+export function race(descriptions, duration) {
     if (!_.isArray(descriptions))
         throw new Error("You must provide an array of descriptions.");
 
@@ -54,7 +54,9 @@ export function reindeer(description) {
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
-    const input = FS.readFileSync(inputPath, "utf-8").trim();
+    const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
+    const descriptions = parse(input);
+    const winner = _.compose(_.get("distance"), _.last, _.sortBy("distance"));;
     
-    console.log("After exactly 2503 seconds, what distance has the winning reindeer traveled?");
+    console.log("After exactly 2503 seconds, what distance has the winning reindeer traveled?", winner(race(descriptions, 2503)));
 }

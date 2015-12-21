@@ -1,6 +1,6 @@
 import _ from "lodash-fp";
 import { expect } from "chai";
-import { title, parse, startRace, reindeer } from "./";
+import { title, parse, race, getWinner, reindeer } from "./";
 
 describe(title, function() {
 
@@ -51,14 +51,14 @@ describe(title, function() {
             
         });
         
-        describe("startRace", function() {
+        describe("race", function() {
 
-            it("should expect an array of participants", function() {
-                expect(() => startRace()).to.throw("You must provide an array of descriptions.");
+            it("should expect an array of descriptions", function() {
+                expect(() => race()).to.throw("You must provide an array of descriptions.");
             });
 
             it("should expect an duration in seconds", function() {
-                expect(() => startRace([])).to.throw("You must provide duration time.");
+                expect(() => race([])).to.throw("You must provide duration time.");
             });
 
             it("should return an array of participants with their name and distance covered", function() {
@@ -67,7 +67,7 @@ describe(title, function() {
                     "Rudolph can fly 3 km/s for 15 seconds, but then must rest for 28 seconds."
                 ];
                 const [vixen, rudolph] = parse(input);
-                const result = startRace([vixen, rudolph], 10);
+                const result = race([vixen, rudolph], 10);
 
                 expect(result).to.be.an("array");
                 expect(result[0]).to.eql({
@@ -78,18 +78,6 @@ describe(title, function() {
                     name: rudolph.name,
                     distance: rudolph.speed * Math.min(rudolph.flyTime, 10)
                 });
-            });
-            
-        });
-
-        describe("getWinner", function() {
-
-            it("should expect an array of participants and their distace covered", function() {
-                
-            });
-
-            it("should return the participant with the most distance covered", function() {
-                
             });
             
         });
