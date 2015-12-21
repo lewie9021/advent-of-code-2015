@@ -13,6 +13,26 @@ export function parse(input) {
     }, input);
 }
 
+export function reindeer(description) {
+    if (!_.isPlainObject(description))
+        throw new Error("You must provide a description object.");
+
+    const {name, speed, flyTime, restTime} = description;
+    let steps = 0;
+    let distance = 0;
+
+    return {
+        name: () => name,
+        distance: () => distance,
+        next: () => {
+            if (steps % (flyTime + restTime) < flyTime)
+                distance += speed;
+
+            steps += 1;
+        }
+    };
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();

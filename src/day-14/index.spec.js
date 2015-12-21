@@ -1,5 +1,6 @@
+import _ from "lodash-fp";
 import { expect } from "chai";
-import { title, parse } from "./";
+import { title, parse, reindeer } from "./";
 
 describe(title, function() {
 
@@ -80,59 +81,91 @@ describe(title, function() {
         });
         
         describe("reindeer", function() {
-
-            it("should expect a name", function() {
-                
+            
+            beforeEach(function() {
+                this.example = {
+                    name: "Vixen",
+                    speed: 19,
+                    flyTime: 7,
+                    restTime: 124
+                };
             });
 
-            it("should expect a speed value", function() {
-                
-            });
-
-            it("should expect a fly time", function() {
-                
-            });
-
-            it("should expect a rest time", function() {
-                
+            it("should expect a description object", function() {
+                expect(() => reindeer()).to.throw("You must provide a description object.");
             });
             
             it("should return an object with properties 'name', 'distance', and 'next'", function() {
-                
+                const result = reindeer(this.example);
+
+                expect(result).to.be.an("object");
+                expect(result.name).to.be.a("function");
+                expect(result.distance).to.be.a("function");
+                expect(result.next).to.be.a("function");
             });
 
             describe("name", function() {
 
                 it("should return the name given on creation", function() {
-                    
+                    const result = reindeer(this.example);
+
+                    expect(result.name()).to.eq(this.example.name);
                 });
 
             });
             
             describe("distance", function() {
 
-                it("should return the current distance covered", function() {
-                    
+                it("should initially return 0 if 'next' has never been called", function() {
+                    const result = reindeer(this.example);
+
+                    expect(result.distance()).to.eq(0);
                 });
 
-                it("should initially return 0 if 'next' has never been called", function() {
+                it("should return the a distance equal to speed after calling 'next'", function() {
+                    const result = reindeer(this.example);
+
+                    result.next();
                     
+                    expect(result.distance()).to.eq(this.example.speed);
                 });
 
             });
 
             describe("next", function() {
 
-                it("should intially move the reindeer", function() {
+                it("should increment the distance by the value of 'speed'", function() {
+                    const result = reindeer(this.example);
+
+                    result.next();
                     
+                    expect(result.distance()).to.eq(this.example.speed);
                 });
 
-                it("should stop moving the reindeer after calling more than the fly time", function() {
+                it("should increment the distance by 'speed' x2 when called twice", function() {
+                    const result = reindeer(this.example);
+
+                    _.times(result.next, 2);
                     
+                    expect(result.distance()).to.eq(this.example.speed * 2);
+                });
+                
+                it("should stop moving the reindeer after calling more than the fly time", function() {
+                    const result = reindeer(this.example);
+                    const {flyTime, speed} = this.example;
+
+                    _.times(result.next, flyTime + 1);
+                    
+                    expect(result.distance()).to.eq(flyTime * speed);
                 });
 
                 it("should start moving the reindeer after calling more than the rest time", function() {
+                    const result = reindeer(this.example);
+                    const {flyTime, speed, restTime} = this.example;
+
+                    _.times(result.next, flyTime + restTime + 1);
                     
+                    expect(result.distance()).to.eq((flyTime + 1) * speed);
                 });
                 
             });
