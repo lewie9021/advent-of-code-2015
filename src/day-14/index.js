@@ -25,9 +25,8 @@ export function race(descriptions, duration) {
     _.times((second) => {
         _.forEach((x) => x.next(), participants);
 
-        const learderboard = _.sortBy(_.invoke("distance"), participants);
-        const furthest = _.first(learderboard).distance();
-        const leaders = _.filter(({distance}) => _.isEqual(distance(), furthest), learderboard);
+        const furthest =  _.max(_.map((x) => x.distance(), participants));
+        const leaders = _.filter(({distance}) => _.isEqual(distance(), furthest), participants);
         
         _.forEach((x) => x.award(), leaders);
     }, duration);
@@ -66,7 +65,9 @@ export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
     const descriptions = parse(input);
-    const winner = _.compose(_.get("distance"), _.last, _.sortBy("distance"));
+    const furthest = _.compose(_.get("distance"), _.last, _.sortBy("distance"));
+    const bestScore = _.compose(_.get("score"), _.last, _.sortBy("score"));
     
-    console.log("After exactly 2503 seconds, what distance has the winning reindeer traveled?", winner(race(descriptions, 2503)));
+    console.log("After exactly 2503 seconds, what distance has the winning reindeer traveled?", furthest(race(descriptions, 2503)));
+    console.log("After exactly 2503 seconds, how many points does the winning reindeer have?", bestScore(race(descriptions, 2503)));
 }
