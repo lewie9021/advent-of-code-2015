@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title } from "./";
+import { title, parse } from "./";
 
 describe(title, function() {
 
@@ -8,23 +8,45 @@ describe(title, function() {
         describe("parse", function() {
 
             it("should return objects with properties 'name', 'speed', 'flyTime', and 'restTime'", function() {
+                const input = [
+                    "Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds.",
+                    "Rudolph can fly 3 km/s for 15 seconds, but then must rest for 28 seconds."
+                ];
+                const result = parse(input);
+
                 
+                expect(Array.isArray(result)).to.eq(true);
+                expect(result.length).to.eq(2);
+
+                result.forEach((description) => expect(description).to.be.an("object"));
             });
 
             it("should make the first word in each sentence the 'name'", function() {
-                
+                const input = ["Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds."];
+                const [description] = parse(input);
+
+                expect(description).to.have.property("name", "Vixen");
             });
 
             it("should make the first integer in each sentence the 'speed'", function() {
-                
+                const input = ["Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds."];
+                const [description] = parse(input);
+
+                expect(description).to.have.property("speed", 19);
             });
 
             it("should make the second integer in each sentence the 'flyTime'", function() {
-                
+                const input = ["Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds."];
+                const [description] = parse(input);
+
+                expect(description).to.have.property("flyTime", 7);
             });
 
             it("should make the last integer in each sentence the 'restTime'", function() {
-                
+                const input = ["Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds."];
+                const [description] = parse(input);
+
+                expect(description).to.have.property("restTime", 124);
             });
             
         });
