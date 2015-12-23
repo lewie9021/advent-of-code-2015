@@ -58,7 +58,8 @@ export function getBestRecipeScore(ingredients) {
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
-    const input = FS.readFileSync(inputPath, "utf-8").trim();
+    const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
+    const ingredients = parse(input);
     
-    console.log("What is the total score of the highest-scoring cookie you can make?");
+    console.log("What is the total score of the highest-scoring cookie you can make?", getBestRecipeScore(ingredients));
 }
