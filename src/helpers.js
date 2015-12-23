@@ -5,6 +5,10 @@ export const split = _.curry((delimiter, str) => str.split(delimiter));
 
 export const join = _.curry((delimiter, str) => str.join(delimiter));
 
+export const multiply = _.curry((x, y) => x * y, 2);
+
+export const merge = (f, ...values) => __.merge(...values, f);
+
 export const reverse = (x) => x.reverse();
 
 export const warpValue = (x, max) => ((x % max) + max) % max;
