@@ -28,7 +28,6 @@ describe(title, function() {
                 _.forEach((ingredient) => {
                     expect(ingredient).to.be.an("object");
                     expect(ingredient).to.have.all.keys([
-                        "name",
                         "capacity",
                         "durability",
                         "flavor",
@@ -42,7 +41,6 @@ describe(title, function() {
                 const [butterscotch, cinnamon] = parse(this.input);
 
                 expect(butterscotch).to.eql({
-                    name: "Butterscotch",
                     capacity: -1,
                     durability: -2,
                     flavor: 6,
@@ -51,7 +49,6 @@ describe(title, function() {
                 });
 
                 expect(cinnamon).to.eql({
-                    name: "Cinnamon",
                     capacity: 2,
                     durability: 3,
                     flavor: -2,
@@ -175,4 +172,21 @@ describe(title, function() {
 
     });
 
+    describe("Part 2:", function() {
+
+        describe("getBestRecipeScore", function() {
+
+            it("should return a total score of 57600000, given the example input", function() {
+                const ingredients = parse([
+                    "Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8",
+                    "Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3"
+                ]);
+                
+                expect(getBestRecipeScore(ingredients, 500)).to.eq(57600000);
+            });
+            
+        });
+        
+    });
+    
 });
