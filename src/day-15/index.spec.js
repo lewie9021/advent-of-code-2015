@@ -1,6 +1,6 @@
 import _ from "lodash-fp";
 import { expect } from "chai";
-import { title, parse, getPermutations } from "./";
+import { title, parse, getPermutations, getBestRecipeScore } from "./";
 
 describe(title, function() {
 
@@ -13,8 +13,7 @@ describe(title, function() {
                     "Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8",
                     "Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3"
                 ];
-            });            
-            
+            });
 
             it("should return an array of ingredients", function() {
                 const ingredients = parse(this.input);
@@ -157,6 +156,19 @@ describe(title, function() {
 
                     expect(match.length).to.eq(1);
                 }, permutations);
+            });
+            
+        });
+
+        describe("getBestRecipeScore", function() {
+
+            it("should return a total score of 62842880, given the example input", function() {
+                const ingredients = parse([
+                    "Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8",
+                    "Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3"
+                ]);
+                
+                expect(getBestRecipeScore(ingredients)).to.eq(62842880);
             });
             
         });

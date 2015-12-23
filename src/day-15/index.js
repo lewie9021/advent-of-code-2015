@@ -1,6 +1,7 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
+import { merge, multiply } from "../helpers";
 
 export const title = "Day 15: Science for Hungry People";
 
@@ -37,8 +38,22 @@ export function parse(input) {
     }, input);
 }
 
-export function getBestRecipe(ingredients) {
-    
+export function getBestRecipeScore(ingredients) {
+    const permutations = getPermutations(ingredients.length, 100);
+    const values = _.map((permutation) => {
+        const totals =_.map((index) => {
+            const quantity = permutation[index];
+            const attributes = _.pick((x, k) => {
+                return !_.includes(k, ["name", "calories"]);
+            }, ingredients[index]);
+            
+            return _.map(multiply(quantity), attributes);
+        }, _.range(0, permutation.length));
+
+        return _.map((x) => Math.max(0, x), merge(_.add, ...totals)).reduce(multiply);
+    }, permutations);
+
+    return _.max(values);
 }
 
 export function run() {
