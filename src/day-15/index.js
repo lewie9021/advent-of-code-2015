@@ -24,6 +24,23 @@ export function getPermutations(bins, balls) {
     return prepend.concat(increment);
 };
 
+export function parse(input) {
+    return _.map((sentence) => {
+        const [name] = sentence.match(/\w+/);
+        const properties = sentence.match(/\b[a-z]+/g);
+        const values = sentence.match(/\-?\d+/g);
+        const attributes = _.reduce((attributes, property, index) => {
+            return _.assign(attributes, {[property]: parseInt(values[index], 10)});
+        }, {}, properties);
+
+        return _.assign(attributes, {name});
+    }, input);
+}
+
+export function getBestRecipe(ingredients) {
+    
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();

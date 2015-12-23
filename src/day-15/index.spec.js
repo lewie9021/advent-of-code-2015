@@ -1,11 +1,68 @@
 import _ from "lodash-fp";
 import { expect } from "chai";
-import { title, getPermutations } from "./";
+import { title, parse, getPermutations } from "./";
 
 describe(title, function() {
 
     describe("Part 1:", function() {
 
+        describe("parse", function() {
+
+            beforeEach(function() {
+                this.input = [
+                    "Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8",
+                    "Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3"
+                ];
+            });            
+            
+
+            it("should return an array of ingredients", function() {
+                const ingredients = parse(this.input);
+                
+                expect(ingredients).to.be.an("array");
+                expect(ingredients.length).to.eq(2);
+            });
+
+            it("should return objects with properties which map to ingredient attributes", function() {
+                const ingredients = parse(this.input);
+
+                _.forEach((ingredient) => {
+                    expect(ingredient).to.be.an("object");
+                    expect(ingredient).to.have.all.keys([
+                        "name",
+                        "capacity",
+                        "durability",
+                        "flavor",
+                        "texture",
+                        "calories"
+                    ]);
+                }, ingredients);
+            });
+            
+            it("should correctly parse the example input", function() {
+                const [butterscotch, cinnamon] = parse(this.input);
+
+                expect(butterscotch).to.eql({
+                    name: "Butterscotch",
+                    capacity: -1,
+                    durability: -2,
+                    flavor: 6,
+                    texture: 3,
+                    calories: 8
+                });
+
+                expect(cinnamon).to.eql({
+                    name: "Cinnamon",
+                    capacity: 2,
+                    durability: 3,
+                    flavor: -2,
+                    texture: -1,
+                    calories: 3
+                });
+            });
+            
+        });
+        
         describe("getPermutations", function() {
 
             before(function() {
