@@ -4,6 +4,26 @@ import _ from "lodash-fp";
 
 export const title = "Day 15: Science for Hungry People";
 
+// https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics).
+export function getPermutations(bins, balls) {
+    if (!balls)
+        return [_.times(_.constant(0), bins)];
+    
+    if (!bins)
+        return [];
+
+    if (bins == 1)
+        return [[balls]];
+
+    // Reduce the total number of bins so the individual values increase.
+    const prepend = _.map((permutation) => [0, ...permutation], getPermutations(bins - 1, balls));
+
+    // Reduce the total number of balls by one so we can increment the first value of each permutation.
+    const increment = _.map(([first, ...rest]) => [first + 1, ...rest], getPermutations(bins, balls - 1));
+    
+    return prepend.concat(increment);
+};
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
