@@ -65,4 +65,5 @@ export function run() {
     const ingredients = parse(input);
     
     console.log("What is the total score of the highest-scoring cookie you can make?", getBestRecipeScore(ingredients));
+    console.log("What is the total score of the highest-scoring cookie you can make with a calorie total of 500?", getBestRecipeScore(ingredients, 500));
 }
