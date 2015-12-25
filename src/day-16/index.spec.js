@@ -91,7 +91,7 @@ describe(title, function() {
                 ];
                 const subject = {a: 1, b: 2, c: 3, d: 4};
 
-                expect(analysisMachine(getMatchScore, input, subject)).to.eql([
+                expect(analysisMachine(getMatchScore, parse(input), subject)).to.eql([
                     {index: 2, score: 75},
                     {index: 1, score: 50},
                     {index: 3, score: 25}
@@ -106,7 +106,7 @@ describe(title, function() {
                 ];
                 const subject = {a: 1, b: 2, c: 3, d: 4};
 
-                expect(analysisMachine(getMatchScore, input, subject)).to.eql([
+                expect(analysisMachine(getMatchScore, parse(input), subject)).to.eql([
                     {index: 3, score: 75},
                     {index: 1, score: 50}
                 ]);
@@ -120,7 +120,7 @@ describe(title, function() {
                 ];
                 const subject = {a: 1, b: 2, c: 3, d: 4};
 
-                expect(analysisMachine(getMatchScore, input, subject)).to.eql([
+                expect(analysisMachine(getMatchScore, parse(input), subject)).to.eql([
                     {index: 3, score: 100},
                     {index: 2, score: 75},
                     {index: 1, score: 25}
@@ -153,7 +153,7 @@ describe(title, function() {
 
         describe("analysisMachine", function() {
 
-            it("should only return matches that are considered valid to getMatchScoreV2", function() {
+            it("should only return matches that getMatchScoreV2 considers valid", function() {
                 const input = [
                     "Sue 1: cats: 3, goldfish: 3",
                     "Sue 2: cats: 2, c: 3, goldfish: 1",
@@ -161,7 +161,7 @@ describe(title, function() {
                 ];
                 const subject = {cats: 1, goldfish: 4, c: 3, d: 4};
 
-                expect(analysisMachine(getMatchScoreV2, input, subject)).to.eql([
+                expect(analysisMachine(getMatchScoreV2, parse(input), subject)).to.eql([
                     {index: 2, score: 75},
                     {index: 1, score: 50},
                     {index: 3, score: 25}

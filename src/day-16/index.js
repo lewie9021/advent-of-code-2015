@@ -63,12 +63,12 @@ export function getMatchScoreV2(subject, sample) {
     return (_.filter(_.isEqual(true), matches).length / matches.length) * 100;
 }
 
-export function analysisMachine(matcher, input, subject) {
+export function analysisMachine(matcher, entries, subject) {
     const isNull = _.compose(_.isEqual(null), _.get("score"));
     const matches = _.map((sample) => ({
         index: sample.index,
         score: matcher(subject, sample)
-    }), parse(input));
+    }), entries);
 
     return reverse(_.sortBy("score", _.filter(_.negate(isNull), matches)));
 }
@@ -76,7 +76,8 @@ export function analysisMachine(matcher, input, subject) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
-    const matches = analysisMachine(getMatchScore, input, {
+    const entries = parse(input);
+    const matches = analysisMachine(getMatchScore, entries, {
         children: 3,
         cats: 7,
         samoyeds: 2,
