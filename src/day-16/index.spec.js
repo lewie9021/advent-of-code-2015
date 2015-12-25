@@ -45,38 +45,38 @@ describe(title, function() {
         describe("getMatchScore", function() {
 
             it("should return null if the subject has no matching properties", function() {
-                const example = {a: 1, b: 2};
-                const subject = {a: 2, b: 1};
+                const example = {a: 2, b: 1};
+                const subject = {a: 1, b: 2};
 
-                expect(getMatchScore(example, subject)).to.eq(null);
+                expect(getMatchScore(subject, example)).to.eq(null);
             });
 
             it("should return null if the subject has at least one property that doesn't match", function() {
-                const example = {a: 1, b: 2};
-                const subject = {a: 1, b: 1};
+                const example = {a: 1, b: 1};
+                const subject = {a: 1, b: 2};
 
-                expect(getMatchScore(example, subject)).to.eq(null);
+                expect(getMatchScore(subject, example)).to.eq(null);
             });
 
             it("should return 100 if the subject matches every property", function() {
                 const example = {a: 1, b: 2};
                 const subject = {a: 1, b: 2};
 
-                expect(getMatchScore(example, subject)).to.eq(100);
+                expect(getMatchScore(subject, example)).to.eq(100);
             });
 
             it("should return 50 if the subject matches on present properties but missing the other half", function() {
-                const example = {a: 1, b: 2, c: 3, d: 4};
-                const subject = {a: 1, b: 2};
+                const example = {a: 1, b: 2};
+                const subject = {a: 1, b: 2, c: 3, d: 4};
 
-                expect(getMatchScore(example, subject)).to.eq(50);
+                expect(getMatchScore(subject, example)).to.eq(50);
             });
 
             it("should return 0 if the subject is empty", function() {
-                const example = {a: 1, b: 2, c: 3, d: 4};
-                const subject = {};
+                const example = {};
+                const subject = {a: 1, b: 2, c: 3, d: 4};
 
-                expect(getMatchScore(example, subject)).to.eq(0);
+                expect(getMatchScore(subject, example)).to.eq(0);
             });
             
         });
@@ -149,6 +149,25 @@ describe(title, function() {
                 expect(getMatchScoreV2(subject, example)).to.eq(100);
             });
             
+        });
+
+        describe("analysisMachine", function() {
+
+            it("should only return matches that are considered valid to getMatchScoreV2", function() {
+                const input = [
+                    "Sue 1: cats: 3, goldfish: 3",
+                    "Sue 2: cats: 2, c: 3, goldfish: 1",
+                    "Sue 3: c: 3"
+                ];
+                const subject = {cats: 1, goldfish: 4, c: 3, d: 4};
+
+                expect(analysisMachine(getMatchScoreV2, input, subject)).to.eql([
+                    {index: 2, score: 75},
+                    {index: 1, score: 50},
+                    {index: 3, score: 25}
+                ]);
+            });
+
         });
         
     });
