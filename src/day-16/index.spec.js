@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, getMatchPercentage, analysisMachine } from "./";
+import { title, parse, getMatchScore, getMatchScoreV2, analysisMachine } from "./";
 
 describe(title, function() {
 
@@ -42,41 +42,41 @@ describe(title, function() {
             
         });
         
-        describe("getMatchPercentage", function() {
+        describe("getMatchScore", function() {
 
             it("should return null if the subject has no matching properties", function() {
                 const example = {a: 1, b: 2};
                 const subject = {a: 2, b: 1};
 
-                expect(getMatchPercentage(example, subject)).to.eq(null);
+                expect(getMatchScore(example, subject)).to.eq(null);
             });
 
             it("should return null if the subject has at least one property that doesn't match", function() {
                 const example = {a: 1, b: 2};
                 const subject = {a: 1, b: 1};
 
-                expect(getMatchPercentage(example, subject)).to.eq(null);
+                expect(getMatchScore(example, subject)).to.eq(null);
             });
 
             it("should return 100 if the subject matches every property", function() {
                 const example = {a: 1, b: 2};
                 const subject = {a: 1, b: 2};
 
-                expect(getMatchPercentage(example, subject)).to.eq(100);
+                expect(getMatchScore(example, subject)).to.eq(100);
             });
 
             it("should return 50 if the subject matches on present properties but missing the other half", function() {
                 const example = {a: 1, b: 2, c: 3, d: 4};
                 const subject = {a: 1, b: 2};
 
-                expect(getMatchPercentage(example, subject)).to.eq(50);
+                expect(getMatchScore(example, subject)).to.eq(50);
             });
 
             it("should return 0 if the subject is empty", function() {
                 const example = {a: 1, b: 2, c: 3, d: 4};
                 const subject = {};
 
-                expect(getMatchPercentage(example, subject)).to.eq(0);
+                expect(getMatchScore(example, subject)).to.eq(0);
             });
             
         });
@@ -91,7 +91,7 @@ describe(title, function() {
                 ];
                 const subject = {a: 1, b: 2, c: 3, d: 4};
 
-                expect(analysisMachine(input, subject)).to.eql([
+                expect(analysisMachine(getMatchScore, input, subject)).to.eql([
                     {index: 2, score: 75},
                     {index: 1, score: 50},
                     {index: 3, score: 25}
@@ -106,7 +106,7 @@ describe(title, function() {
                 ];
                 const subject = {a: 1, b: 2, c: 3, d: 4};
 
-                expect(analysisMachine(input, subject)).to.eql([
+                expect(analysisMachine(getMatchScore, input, subject)).to.eql([
                     {index: 3, score: 75},
                     {index: 1, score: 50}
                 ]);
@@ -120,11 +120,33 @@ describe(title, function() {
                 ];
                 const subject = {a: 1, b: 2, c: 3, d: 4};
 
-                expect(analysisMachine(input, subject)).to.eql([
+                expect(analysisMachine(getMatchScore, input, subject)).to.eql([
                     {index: 3, score: 100},
                     {index: 2, score: 75},
                     {index: 1, score: 25}
                 ]);
+            });
+            
+        });
+        
+    });
+
+    describe("Part 2:", function() {
+
+        describe("getMatchScoreV2", function() {
+
+            it("should match if the example has 'cats' and 'trees' more than the subject", function() {
+                const example = {cats: 5, trees: 3};
+                const subject = {cats: 3, trees: 1};
+
+                expect(getMatchScoreV2(subject, example)).to.eq(100);
+            });
+
+            it("should match if the example has 'pomeranians' and 'goldfish' less than the subject", function() {
+                const example = {pomeranians: 2, goldfish: 0};
+                const subject = {pomeranians: 6, goldfish: 2};
+
+                expect(getMatchScoreV2(subject, example)).to.eq(100);
             });
             
         });

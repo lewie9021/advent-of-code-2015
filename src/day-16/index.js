@@ -17,7 +17,7 @@ export function parse(input) {
     }, input);
 }
 
-export function getMatchPercentage(subject, sample) {
+export function getMatchScore(subject, sample) {
     const matches = _.map((key) => {
         const a = subject[key];
         const b = sample[key];
@@ -25,10 +25,7 @@ export function getMatchPercentage(subject, sample) {
         if (_.isUndefined(b))
             return false;
 
-        if (_.isEqual(a, b))
-            return true;
-        else
-            return null;
+        return (_.isEqual(a, b)) ? true : null;
     }, _.keys(subject));
     
     if (_.includes(null, matches))
@@ -40,11 +37,37 @@ export function getMatchPercentage(subject, sample) {
     return (_.filter(_.isEqual(true), matches).length / matches.length) * 100;
 }
 
-export function analysisMachine(input, subject) {
+export function getMatchScoreV2(subject, sample) {
+    const matches = _.map((key) => {
+        const a = subject[key];
+        const b = sample[key];
+
+        if (_.isUndefined(b))
+            return false;
+
+        if (_.includes(key, ["cats", "trees"]) && _.gt(a, b))
+            return true;
+
+        if (_.includes(key, ["pomeranians", "goldfish"]) && _.lt(a, b))
+            return true;
+        
+        return _.isEqual(a, b) ? true : null;
+    }, _.keys(subject));
+    
+    if (_.includes(null, matches))
+        return null;
+
+    if (!matches.length)
+        return 0;
+
+    return (_.filter(_.isEqual(true), matches).length / matches.length) * 100;
+}
+
+export function analysisMachine(matcher, input, subject) {
     const isNull = _.compose(_.isEqual(null), _.get("score"));
     const matches = _.map((sample) => ({
         index: sample.index,
-        score: getMatchPercentage(subject, sample)
+        score: matcher(subject, sample)
     }), parse(input));
 
     return reverse(_.sortBy("score", _.filter(_.negate(isNull), matches)));
@@ -53,7 +76,7 @@ export function analysisMachine(input, subject) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
-    const matches = analysisMachine(input, {
+    const matches = analysisMachine(getMatchScore, input, {
         children: 3,
         cats: 7,
         samoyeds: 2,
