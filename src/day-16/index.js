@@ -76,8 +76,9 @@ export function analysisMachine(matcher, entries, subject) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
+    const getIndex = _.compose(_.get("index"), _.first);
     const entries = parse(input);
-    const matches = analysisMachine(getMatchScore, entries, {
+    const profile = {
         children: 3,
         cats: 7,
         samoyeds: 2,
@@ -88,7 +89,8 @@ export function run() {
         trees: 3,
         cars: 2,
         perfumes: 1
-    });
+    };
 
-    console.log("What is the number of the Sue that got you the gift?", _.get("index", _.first(matches)));
+    console.log("What is the number of the Sue that got you the gift?", getIndex(analysisMachine(getMatchScore, entries, profile)));
+    console.log("What is the number of the real Aunt Sue?", getIndex(analysisMachine(getMatchScoreV2, entries, profile)));
 }
