@@ -83,7 +83,7 @@ describe(title, function() {
 
         describe("analysisMachine", function() {
 
-            it("should return match percentages for each entry", function() {
+            it("should return an object for each match containing a match percentage and index", function() {
                 const input = [
                     "Sue 1: a: 1, b: 2",
                     "Sue 2: a: 1, c: 3, d: 4",
@@ -91,7 +91,11 @@ describe(title, function() {
                 ];
                 const subject = {a: 1, b: 2, c: 3, d: 4};
 
-                expect(analysisMachine(input, subject)).to.eql([50, 75, 25]);
+                expect(analysisMachine(input, subject)).to.eql([
+                    {index: 2, score: 75},
+                    {index: 1, score: 50},
+                    {index: 3, score: 25}
+                ]);
             });
 
             it("should filter out entries that don't match", function() {
@@ -102,7 +106,25 @@ describe(title, function() {
                 ];
                 const subject = {a: 1, b: 2, c: 3, d: 4};
 
-                expect(analysisMachine(input, subject)).to.eql([50, 75]);
+                expect(analysisMachine(input, subject)).to.eql([
+                    {index: 3, score: 75},
+                    {index: 1, score: 50}
+                ]);
+            });
+
+            it("should sort by match percentage", function() {
+                const input = [
+                    "Sue 1: a: 1",
+                    "Sue 2: a: 1, c: 3, d: 4",
+                    "Sue 3: a: 1, b: 2, c: 3, d: 4"
+                ];
+                const subject = {a: 1, b: 2, c: 3, d: 4};
+
+                expect(analysisMachine(input, subject)).to.eql([
+                    {index: 3, score: 100},
+                    {index: 2, score: 75},
+                    {index: 1, score: 25}
+                ]);
             });
             
         });

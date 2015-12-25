@@ -1,7 +1,7 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
-import { split } from "../helpers";
+import { reverse } from "../helpers";
 
 export const title = "Day 16: Aunt Sue";
 
@@ -41,16 +41,18 @@ export function getMatchPercentage(subject, sample) {
 }
 
 export function analysisMachine(input, subject) {
-    const matchPercentages = _.map((sample) => {
-        return getMatchPercentage(subject, sample);
-    }, parse(input));
+    const isNull = _.compose(_.isEqual(null), _.get("score"));
+    const matches = _.map((sample) => ({
+        index: sample.index,
+        score: getMatchPercentage(subject, sample)
+    }), parse(input));
 
-    return _.filter(_.negate(_.isEqual(null)), matchPercentages);
+    return reverse(_.sortBy("score", _.filter(_.negate(isNull), matches)));
 }
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
-    
+
     console.log("What is the number of the Sue that got you the gift?");
 }
