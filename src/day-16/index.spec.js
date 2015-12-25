@@ -11,14 +11,14 @@ describe(title, function() {
                 const example = {a: 1, b: 2};
                 const subject = {a: 2, b: 1};
 
-                expect(getMatchPercentage(example, subject)).to.eq(0);
+                expect(getMatchPercentage(example, subject)).to.eq(null);
             });
 
             it("should return null if the subject has at least one property that doesn't match", function() {
                 const example = {a: 1, b: 2};
                 const subject = {a: 1, b: 1};
 
-                expect(getMatchPercentage(example, subject)).to.eq(0);
+                expect(getMatchPercentage(example, subject)).to.eq(null);
             });
 
             it("should return 100 if the subject matches every property", function() {
