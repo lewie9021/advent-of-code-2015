@@ -53,6 +53,18 @@ export function analysisMachine(input, subject) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
+    const matches = analysisMachine(input, {
+        children: 3,
+        cats: 7,
+        samoyeds: 2,
+        pomeranians: 3,
+        akitas: 0,
+        vizslas: 0,
+        goldfish: 5,
+        trees: 3,
+        cars: 2,
+        perfumes: 1
+    });
 
-    console.log("What is the number of the Sue that got you the gift?");
+    console.log("What is the number of the Sue that got you the gift?", _.get("index", _.first(matches)));
 }
