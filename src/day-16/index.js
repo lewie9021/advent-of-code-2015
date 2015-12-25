@@ -4,6 +4,10 @@ import _ from "lodash-fp";
 
 export const title = "Day 16: Aunt Sue";
 
+export function getMatchPercentage() {
+    
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
