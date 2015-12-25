@@ -1,10 +1,47 @@
 import { expect } from "chai";
-import { title, getMatchPercentage } from "./";
+import { title, parse, getMatchPercentage } from "./";
 
 describe(title, function() {
 
     describe("Part 1:", function() {
 
+        describe("parse", function() {
+
+            it("should return an array of objects", function() {
+                const input = [
+                    "Sue 1: goldfish: 6, trees: 9, akitas: 0"
+                ];
+                const result = parse(input);
+                
+                
+                expect(result).to.be.an("array");
+                expect(result.length).to.eq(1);
+            });
+
+            it("should assign an index property using the number after 'Sue'", function() {
+                const input = [
+                    "Sue 1: goldfish: 6, trees: 9, akitas: 0",
+                    "Sue 67: trees: 10, pomeranians: 7, samoyeds: 3"
+                ];
+                const result = parse(input).map(({index}) => index);
+
+                expect(result).to.eql([1, 67]);
+            });
+            
+            it("should parse each kay value pair", function() {
+                const input = [
+                    "Sue 1: goldfish: 6, trees: 9, akitas: 0",
+                    "Sue 67: trees: 10, pomeranians: 7, samoyeds: 3"
+                ];
+
+                expect(parse(input)).to.eql([
+                    {index: 1, goldfish: 6, trees: 9, akitas: 0},
+                    {index: 67, trees: 10, pomeranians: 7, samoyeds: 3}
+                ]);
+            });
+            
+        });
+        
         describe("getMatchPercentage", function() {
 
             it("should return null if the subject has no matching properties", function() {
