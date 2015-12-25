@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, getMatchPercentage } from "./";
+import { title, parse, getMatchPercentage, analysisMachine } from "./";
 
 describe(title, function() {
 
@@ -77,6 +77,32 @@ describe(title, function() {
                 const subject = {};
 
                 expect(getMatchPercentage(example, subject)).to.eq(0);
+            });
+            
+        });
+
+        describe("analysisMachine", function() {
+
+            it("should return match percentages for each entry", function() {
+                const input = [
+                    "Sue 1: a: 1, b: 2",
+                    "Sue 2: a: 1, c: 3, d: 4",
+                    "Sue 3: c: 3"
+                ];
+                const subject = {a: 1, b: 2, c: 3, d: 4};
+
+                expect(analysisMachine(input, subject)).to.eql([50, 75, 25]);
+            });
+
+            it("should filter out entries that don't match", function() {
+                const input = [
+                    "Sue 1: a: 1, b: 2",
+                    "Sue 2: a: 5, c: 3",
+                    "Sue 3: a: 1, c: 3, d: 4"
+                ];
+                const subject = {a: 1, b: 2, c: 3, d: 4};
+
+                expect(analysisMachine(input, subject)).to.eql([50, 75]);
             });
             
         });

@@ -17,19 +17,19 @@ export function parse(input) {
     }, input);
 }
 
-export function getMatchPercentage(a, b) {
+export function getMatchPercentage(subject, sample) {
     const matches = _.map((key) => {
-        const val = a[key];
-        const otherVal = b[key];
+        const a = subject[key];
+        const b = sample[key];
 
-        if (_.isUndefined(otherVal))
+        if (_.isUndefined(b))
             return false;
 
-        if (_.isEqual(val, otherVal))
+        if (_.isEqual(a, b))
             return true;
         else
             return null;
-    }, _.keys(a));
+    }, _.keys(subject));
     
     if (_.includes(null, matches))
         return null;
@@ -38,6 +38,14 @@ export function getMatchPercentage(a, b) {
         return 0;
 
     return (_.filter(_.isEqual(true), matches).length / matches.length) * 100;
+}
+
+export function analysisMachine(input, subject) {
+    const matchPercentages = _.map((sample) => {
+        return getMatchPercentage(subject, sample);
+    }, parse(input));
+
+    return _.filter(_.negate(_.isEqual(null)), matchPercentages);
 }
 
 export function run() {
