@@ -23,6 +23,7 @@ export function getCombinations(list, target, partial = [], result = []) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
-    
-    console.log("Filling all containers entirely, how many different combinations of containers can exactly fit all 150 liters of eggnog?");
+    const combinations = getCombinations(_.map(_.parseInt(10), input), 150);
+
+    console.log("Filling all containers entirely, how many different combinations of containers can exactly fit all 150 liters of eggnog?", combinations.length);
 }
