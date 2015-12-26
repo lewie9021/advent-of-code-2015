@@ -24,6 +24,9 @@ export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
     const combinations = getCombinations(_.map(_.parseInt(10), input), 150);
-
+    const groups = _.groupBy(_.get("length"), combinations);
+    const min = _.min(Object.keys(groups));
+    
     console.log("Filling all containers entirely, how many different combinations of containers can exactly fit all 150 liters of eggnog?", combinations.length);
+    console.log("Given the minimum number of containers that can exactly fit all 150 liters of eggnog. How many different ways can you fill that number of containers and still hold exactly 150 litres?", groups[min].length);
 }
