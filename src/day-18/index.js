@@ -1,8 +1,11 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
+import { split } from "../helpers";
 
 export const title = "Day 18: Like a GIF For Your Yard";
+
+export const parse = _.compose(_.map(split("")), split("\n"));
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");

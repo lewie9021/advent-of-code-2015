@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title } from "./";
+import { title, parse } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
