@@ -37,36 +37,40 @@ export function getNeighbours(grid, [x, y]) {
     )();
 }
 
-export function animate(grid) {
+export function animate(grid, determineState) {
     const width = grid[0].length;
     const height = grid.length;
 
     return _.map((y) => {
         return  _.map((x) => {
-            const neighbours = getNeighbours(grid, [x, y]);
-            const onCount = _.filter(_.isEqual("#"), neighbours).length;
-            const currentState = grid[y][x];
-
-            // A light which is on stays on when 3 neighbors are on.
-            // A light which is off turns on if exactly 3 neighbors are on.
-            if (onCount == 3)
-                return "#";
-
-            // A light which is on stays on when 2 neighbors are on.
-            if (currentState == "#" && onCount == 2)
-                return "#";
-
-            // A light turns off / stays off otherwise.
-            return ".";
+            return determineState(x, y, grid);
         }, _.range(0, width));
     }, _.range(0, height));
+}
+
+export function stateRules(x, y, grid) {
+    const neighbours = getNeighbours(grid, [x, y]);
+    const onCount = _.filter(_.isEqual("#"), neighbours).length;
+    const currentState = grid[y][x];
+    
+    // A light which is on stays on when 3 neighbors are on.
+    // A light which is off turns on if exactly 3 neighbors are on.
+    if (onCount == 3)
+        return "#";
+
+    // A light which is on stays on when 2 neighbors are on.
+    if (currentState == "#" && onCount == 2)
+        return "#";
+
+    // A light turns off / stays off otherwise.
+    return ".";
 }
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
     const onCount = _.compose(_.get("length"), _.filter(_.isEqual("#")), _.flatten);
-    const grid = _.reduce(animate, parse(input), _.range(0, 100));
+    const grid = _.reduce((grid) => animate(grid, stateRules), parse(input), _.range(0, 100));
     
     console.log("Given your initial configuration, how many lights are on after 100 steps?", onCount(grid));
 }
