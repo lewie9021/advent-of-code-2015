@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, getNeighbours } from "./";
+import { title, parse, getNeighbours, animate } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
@@ -91,10 +91,103 @@ describe(title, function() {
             
         });
 
-        xdescribe("animate", function() {
+        describe("animate", function() {
 
-            it("should work", function() {
+            it("should turn on lights that have exactly 3 neighbours on", function() {
+                const input = [
+                    ".#",
+                    "##",
+                ].join("\n");
+                const grid = parse(input);
+
+                animate(grid);
                 
+                expect(grid[0][0]).to.eq("#");
+            });
+
+            it("should leave the light on that has 2 neighbours on", function() {
+                const input = [
+                    "##",
+                    ".#",
+                ].join("\n");
+                const grid = parse(input);
+
+                animate(grid);
+                
+                expect(grid[0][0]).to.eq("#");
+            });
+            
+            it("should keep the light on that has 3 neighbours on", function() {
+                const input = [
+                    "##",
+                    "##",
+                ].join("\n");
+                const grid = parse(input);
+
+                animate(grid);
+                
+                expect(grid[0][0]).to.eq("#");
+            });
+
+            it("should turn the light off if it doesn't have 2-3 neighbours on", function() {
+                const isTurnedOff = (input) => {
+                    const grid = parse(input.join("\n"));
+
+                    animate(grid);
+                
+                    expect(grid[0][0]).to.eq(".");
+                };
+
+                isTurnedOff(["#.", ".."]);
+                isTurnedOff(["##", ".."]);
+                isTurnedOff(["#.", "#."]);
+                isTurnedOff(["#.", ".#"]);
+            });
+            
+            it("should correctly animate the example initial state", function() {
+                const input = [
+                    ".#.#.#",
+                    "...##.",
+                    "#....#",
+                    "..#...",
+                    "#.#..#",
+                    "####.."
+                ].join("\n");
+                const grid = parse(input);
+
+                animate(grid);
+                
+                expect(grid).to.eql([
+                    [".", ".", "#", "#", ".", "."],
+                    [".", ".", "#", "#", ".", "#"],
+                    [".", ".", ".", "#", "#", "."],
+                    [".", ".", ".", ".", ".", "."],
+                    ["#", ".", "#", "#", ".", "#"],
+                    ["#", ".", "#", "#", ".", "."]
+                ]);
+            });
+
+            it("should correctly animate the example step 1", function() {
+                const input = [
+                    "..##..",
+                    "..##.#",
+                    "...##.",
+                    "......",
+                    "#.....",
+                    "#.##.."
+                ].join("\n");
+                const grid = parse(input);
+
+                animate(grid);
+                
+                expect(grid).to.eql([
+                    [".", ".", "#", "#", "#", "."],
+                    [".", ".", ".", ".", ".", "."],
+                    [".", ".", "#", "#", "#", "."],
+                    [".", ".", ".", ".", ".", "."],
+                    [".", "#", ".", ".", ".", "."],
+                    [".", "#", ".", ".", ".", "."]
+                ]);
             });
 
         });

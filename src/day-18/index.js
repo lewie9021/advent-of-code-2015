@@ -35,6 +35,10 @@ export function getNeighbours(grid, [x, y]) {
     )();
 }
 
+export function animate(grid) {
+    
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
