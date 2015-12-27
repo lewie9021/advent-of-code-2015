@@ -65,6 +65,8 @@ export function animate(grid) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
+    const onCount = _.compose(_.get("length"), _.filter(_.isEqual("#")), _.flatten);
+    const grid = _.reduce(animate, parse(input), _.range(0, 100));
     
-    console.log("Given your initial configuration, how many lights are on after 100 steps?");
+    console.log("Given your initial configuration, how many lights are on after 100 steps?", onCount(grid));
 }
