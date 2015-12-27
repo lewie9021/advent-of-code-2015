@@ -7,6 +7,32 @@ export const title = "Day 18: Like a GIF For Your Yard";
 
 export const parse = _.compose(_.map(split("")), split("\n"));
 
+
+function getDirections() {
+    const directions = _.map((y) => {
+        return _.map((x) => {
+            return [x, y];
+        }, _.range(-1, 2));
+    }, _.range(-1, 2));
+
+    return _.filter(_.negate(_.isEqual([0, 0])), _.flatten(directions));
+}
+
+export function getNeighbours(grid, [x, y]) {
+    const add = ([xx, yy]) => [x + xx, y + yy];
+    const withinGrid = ([xx, yy]) =>
+              // Within Width
+              _.gte(0, xx) && _.lt(grid[0].length, xx) &&
+              // Within Height
+              _.gte(0, yy) && _.lt(grid.length, yy);
+    
+    return _.compose(
+        _.map(([xx, yy]) => grid[yy][xx]),
+        _.filter(withinGrid),
+        _.map(add)
+    )(getDirections());
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();

@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse } from "./";
+import { title, parse, getNeighbours } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
@@ -73,6 +73,8 @@ describe(title, function() {
                 const coordinate = [0, 0];
                 const neighbours = getNeighbours(this.grid, coordinate);
                 const characters = _.groupBy(_.identity, neighbours);
+                
+                
 
                 expect(characters["."].length).to.eq(2);
                 expect(characters["#"].length).to.eq(1);
