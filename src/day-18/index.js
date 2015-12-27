@@ -19,6 +19,18 @@ function getDirections() {
     )(directions);
 }
 
+function getCorners(grid) {
+    const right = grid[0].length - 1;
+    const bottom = grid.length - 1;
+    
+    return [
+        [0, 0],
+        [right, 0],
+        [right, bottom],
+        [0, bottom]
+    ];
+}
+
 export function getNeighbours(grid, [x, y]) {
     const width = grid[0].length;
     const height = grid.length;
@@ -66,11 +78,34 @@ export function stateRules(x, y, grid) {
     return ".";
 }
 
+export function stateRules2(x, y, grid) {
+    // Check the coordinate isn't a corner.
+    if (_.some(_.isEqual([x, y]), getCorners(grid)))
+        return "#";
+
+    // Fallback to the rules set by stateRules.
+    return stateRules(...arguments);
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
     const onCount = _.compose(_.get("length"), _.filter(_.isEqual("#")), _.flatten);
-    const grid = _.reduce((grid) => animate(grid, stateRules), parse(input), _.range(0, 100));
+    const runAnimation = (initialState, rules, times) => {
+        return _.reduce((grid) => animate(grid, rules), initialState, _.range(0, times));
+    };
+    const initialState = parse(input);
+    const initialState2 = (() => {
+        let grid = parse(input);
+
+        // Turn all corners on.
+        _.map(([x, y]) => {
+            grid[y][x] = "#";
+        }, getCorners(grid));
+        
+        return grid;
+    })();
     
-    console.log("Given your initial configuration, how many lights are on after 100 steps?", onCount(grid));
+    console.log("Given your initial configuration, how many lights are on after 100 steps?", onCount(runAnimation(initialState, stateRules, 100)));
+    console.log("Given your initial configuration, but with the four corners always in the on state, how many lights are on after 100 steps?", onCount(runAnimation(initialState2, stateRules2, 100)));
 }

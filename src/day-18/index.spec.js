@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, getNeighbours, animate, stateRules } from "./";
+import { title, parse, getNeighbours, animate, stateRules, stateRules2 } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
@@ -140,7 +140,7 @@ describe(title, function() {
                 isTurnedOff(["#.", ".#"]);
             });
             
-            it("should correctly animate the example initial state", function() {
+            it("should correctly animate the example's initial state", function() {
                 const input = [
                     ".#.#.#",
                     "...##.",
@@ -162,7 +162,7 @@ describe(title, function() {
                 ]);
             });
 
-            it("should correctly animate the example step 1", function() {
+            it("should correctly animate the example's step 1", function() {
                 const input = [
                     "..##..",
                     "..##.#",
@@ -184,8 +184,90 @@ describe(title, function() {
                 ]);
             });
 
+            it("should correctly animate the example", function() {
+                const input = [
+                    ".#.#.#",
+                    "...##.",
+                    "#....#",
+                    "..#...",
+                    "#.#..#",
+                    "####.."
+                ].join("\n");
+                const onCount = _.compose(_.get("length"), _.filter(_.isEqual("#")), _.flatten);
+                const result = _.reduce((grid) => animate(grid, stateRules), parse(input), _.range(0, 5));
+
+                expect(onCount(result)).to.eq(4);
+            });
+
         });
 
+    });
+
+    describe("Part 2:", function() {
+
+        describe("animate", function() {
+            
+            it("should correctly animate the example's initial state", function() {
+                const input = [
+                    "##.#.#",
+                    "...##.",
+                    "#....#",
+                    "..#...",
+                    "#.#..#",
+                    "####.#"
+                ].join("\n");
+                const grid = parse(input);
+                const nextState = animate(grid, stateRules2);
+                
+                expect(nextState).to.eql([
+                    ["#", ".", "#", "#", ".", "#"],
+                    ["#", "#", "#", "#", ".", "#"],
+                    [".", ".", ".", "#", "#", "."],
+                    [".", ".", ".", ".", ".", "."],
+                    ["#", ".", ".", ".", "#", "."],
+                    ["#", ".", "#", "#", "#", "#"]
+                ]);
+            });
+
+            it("should correctly animate the example's step 1", function() {
+                const input = [
+                    "#.##.#",
+                    "####.#",
+                    "...##.",
+                    "......",
+                    "#...#.",
+                    "#.####"
+                ].join("\n");
+                const grid = parse(input);
+                const nextState = animate(grid, stateRules2);
+                
+                expect(nextState).to.eql([
+                    ["#", ".", ".", "#", ".", "#"],
+                    ["#", ".", ".", ".", ".", "#"],
+                    [".", "#", ".", "#", "#", "."],
+                    [".", ".", ".", "#", "#", "."],
+                    [".", "#", ".", ".", "#", "#"],
+                    ["#", "#", ".", "#", "#", "#"]
+                ]);
+            });
+
+            it("should correctly animate the example", function() {
+                const input = [
+                    "##.#.#",
+                    "...##.",
+                    "#....#",
+                    "..#...",
+                    "#.#..#",
+                    "####.#"
+                ].join("\n");
+                const onCount = _.compose(_.get("length"), _.filter(_.isEqual("#")), _.flatten);
+                const result = _.reduce((grid) => animate(grid, stateRules2), parse(input), _.range(0, 5));
+
+                expect(onCount(result)).to.eq(17);
+            });
+            
+        });
+        
     });
 
 });
