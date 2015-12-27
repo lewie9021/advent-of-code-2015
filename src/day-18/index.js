@@ -7,15 +7,16 @@ export const title = "Day 18: Like a GIF For Your Yard";
 
 export const parse = _.compose(_.map(split("")), split("\n"));
 
-
 function getDirections() {
+    const range = _.range(-1, 2);
     const directions = _.map((y) => {
-        return _.map((x) => {
-            return [x, y];
-        }, _.range(-1, 2));
-    }, _.range(-1, 2));
+        return _.map((x) => [x, y], range);
+    }, range);
 
-    return _.filter(_.negate(_.isEqual([0, 0])), _.flatten(directions));
+    return _.compose(
+        _.filter(_.negate(_.isEqual([0, 0]))),
+        _.flatten
+    )(directions);
 }
 
 export function getNeighbours(grid, [x, y]) {
@@ -29,8 +30,9 @@ export function getNeighbours(grid, [x, y]) {
     return _.compose(
         _.map(([xx, yy]) => grid[yy][xx]),
         _.filter(withinGrid),
-        _.map(add)
-    )(getDirections());
+        _.map(add),
+        getDirections
+    )();
 }
 
 export function run() {
