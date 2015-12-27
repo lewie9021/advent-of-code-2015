@@ -20,12 +20,14 @@ function getDirections() {
 }
 
 export function getNeighbours(grid, [x, y]) {
+    const width = grid[0].length;
+    const height = grid.length;
     const add = ([xx, yy]) => [x + xx, y + yy];
     const withinGrid = ([xx, yy]) =>
               // Within Width
-              _.gte(0, xx) && _.lt(grid[0].length, xx) &&
+              _.gte(0, xx) && _.lt(width, xx) &&
               // Within Height
-              _.gte(0, yy) && _.lt(grid.length, yy);
+              _.gte(0, yy) && _.lt(height, yy);
     
     return _.compose(
         _.map(([xx, yy]) => grid[yy][xx]),
@@ -36,7 +38,28 @@ export function getNeighbours(grid, [x, y]) {
 }
 
 export function animate(grid) {
-    
+    const width = grid[0].length;
+    const height = grid.length;
+
+    return _.map((y) => {
+        return  _.map((x) => {
+            const neighbours = getNeighbours(grid, [x, y]);
+            const onCount = _.filter(_.isEqual("#"), neighbours).length;
+            const currentState = grid[y][x];
+
+            // A light which is on stays on when 3 neighbors are on.
+            // A light which is off turns on if exactly 3 neighbors are on.
+            if (onCount == 3)
+                return "#";
+
+            // A light which is on stays on when 2 neighbors are on.
+            if (currentState == "#" && onCount == 2)
+                return "#";
+
+            // A light turns off / stays off otherwise.
+            return ".";
+        }, _.range(0, width));
+    }, _.range(0, height));
 }
 
 export function run() {

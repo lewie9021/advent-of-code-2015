@@ -99,10 +99,9 @@ describe(title, function() {
                     "##",
                 ].join("\n");
                 const grid = parse(input);
-
-                animate(grid);
+                const nextState = animate(grid);
                 
-                expect(grid[0][0]).to.eq("#");
+                expect(nextState[0][0]).to.eq("#");
             });
 
             it("should leave the light on that has 2 neighbours on", function() {
@@ -111,10 +110,9 @@ describe(title, function() {
                     ".#",
                 ].join("\n");
                 const grid = parse(input);
-
-                animate(grid);
+                const nextState = animate(grid);
                 
-                expect(grid[0][0]).to.eq("#");
+                expect(nextState[0][0]).to.eq("#");
             });
             
             it("should keep the light on that has 3 neighbours on", function() {
@@ -123,19 +121,17 @@ describe(title, function() {
                     "##",
                 ].join("\n");
                 const grid = parse(input);
-
-                animate(grid);
+                const nextState = animate(grid);
                 
-                expect(grid[0][0]).to.eq("#");
+                expect(nextState[0][0]).to.eq("#");
             });
 
             it("should turn the light off if it doesn't have 2-3 neighbours on", function() {
                 const isTurnedOff = (input) => {
                     const grid = parse(input.join("\n"));
-
-                    animate(grid);
+                    const nextState = animate(grid);
                 
-                    expect(grid[0][0]).to.eq(".");
+                    expect(nextState[0][0]).to.eq(".");
                 };
 
                 isTurnedOff(["#.", ".."]);
@@ -154,15 +150,14 @@ describe(title, function() {
                     "####.."
                 ].join("\n");
                 const grid = parse(input);
-
-                animate(grid);
+                const nextState = animate(grid);
                 
-                expect(grid).to.eql([
+                expect(nextState).to.eql([
                     [".", ".", "#", "#", ".", "."],
                     [".", ".", "#", "#", ".", "#"],
                     [".", ".", ".", "#", "#", "."],
                     [".", ".", ".", ".", ".", "."],
-                    ["#", ".", "#", "#", ".", "#"],
+                    ["#", ".", ".", ".", ".", "."],
                     ["#", ".", "#", "#", ".", "."]
                 ]);
             });
@@ -177,10 +172,9 @@ describe(title, function() {
                     "#.##.."
                 ].join("\n");
                 const grid = parse(input);
-
-                animate(grid);
+                const nextState = animate(grid);
                 
-                expect(grid).to.eql([
+                expect(nextState).to.eql([
                     [".", ".", "#", "#", "#", "."],
                     [".", ".", ".", ".", ".", "."],
                     [".", ".", "#", "#", "#", "."],
