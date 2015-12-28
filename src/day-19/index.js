@@ -45,7 +45,9 @@ export function getDistinctMolecules(molecule, replacements) {
 
 export function fabricateMolecule(start, target, replacements) {
     const findTarget = (value, target, count = 1) => {
-        const molecules = _.filter((x) => x.length <= target.length, getDistinctMolecules(value, replacements));
+        const molecules = _.filter(({length}) => {
+            return length <= target.length;
+        }, getDistinctMolecules(value, replacements));
         
         if (!molecules.length)
             return null;
@@ -65,7 +67,7 @@ export function fabricateMolecule(start, target, replacements) {
         return findTarget(value, target);
     }, seeds));
 
-    return _.min(values);
+    return (values.length) ? _.min(values) : null;
 }
 
 export function run() {

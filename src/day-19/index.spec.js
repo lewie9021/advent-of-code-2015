@@ -199,6 +199,23 @@ describe(title, function() {
 
                 expect(result).to.eq(6);
             });
+
+            it("should return null, given a string which isn't possible to generate", function() {
+                const input = [
+                    "e => H",
+                    "e => O",
+                    "H => HO",
+                    "H => OH",
+                    "O => HH",
+                    "",
+                    "SANTA"
+                ];
+
+                const {molecule, replacements} = parse(input);
+                const result = fabricateMolecule("e", molecule, replacements);
+
+                expect(result).to.eq(null);
+            });
             
         });
         
