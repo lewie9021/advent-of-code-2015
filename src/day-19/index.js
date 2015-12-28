@@ -27,45 +27,40 @@ function getMatchIndexes(partial, string) {
 }
 
 export function getDistinctMolecules(molecule, replacements) {
-    const getMolecules = ({key, value}) => {
-        return _.map((index) => {
-            const left = molecule.slice(0, index);
-            const right = molecule.slice(index + key.length, molecule.length);
+    const molecules = _.reduce((molecules, {key, value}) => {
+        _.map((index) => {
+            const left = molecule.substring(0, index);
+            const right = molecule.substring(index + key.length);
             
-            return `${left}${value}${right}`;
+            molecules[`${left}${value}${right}`] = null;
         }, getMatchIndexes(key, molecule));
-    };
 
-    return _.compose(
-        _.unique,
-        _.flatten,
-        _.map(getMolecules)
-    )(replacements);
+        return molecules;
+    }, {}, replacements);
+    
+    return Object.keys(molecules);
 }
 
 export function fabricateMolecule(start, target, replacements) {
-    const findTarget = (value, target, count = 1) => {
-        const molecules = _.filter(({length}) => {
-            return length <= target.length;
-        }, getDistinctMolecules(value, replacements));
-        
-        if (!molecules.length)
-            return null;
-        
-        if (_.includes(target, molecules))
-            return count + 1;
+    const findTarget = (molecules, target, count = 1) => {
+        return _.reduce((steps, molecule) => {
+            if (steps.length || molecule.length > target.length)
+                return steps;
 
-        const values = _.compact(_.map((value) => {
-            return findTarget(value, target, count + 1);
-        }, molecules));
+            if (molecule == target) {
+                console.log("count:", count);
+                
+                return steps.concat(count);
+            }
+            
+            const transformed = getDistinctMolecules(molecule, replacements);
 
-        return (values.length) ? _.min(values) : null;
+            return steps.concat(findTarget(transformed, target, count + 1));
+        }, [], molecules);
     };
 
     const seeds = _.filter(({key}) => key == start, replacements);
-    const values = _.compact(_.map(({key, value}) => {
-        return findTarget(value, target);
-    }, seeds));
+    const values = findTarget(_.map(_.get("value"), seeds), target);
 
     return (values.length) ? _.min(values) : null;
 }
@@ -74,7 +69,7 @@ export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
     const {molecule, replacements} = parse(input);
-    const count = getDistinctMolecules(molecule, replacements).length;
     
-    console.log("How many distinct molecules can be created after all the different ways you can do one replacement on the medicine molecule?", count);
+    console.log("How many distinct molecules can be created after all the different ways you can do one replacement on the medicine molecule?", getDistinctMolecules(molecule, replacements).length);
+    console.log("What is the fewest number of steps to go from e to the medicine molecule?", fabricateMolecule("e", molecule, replacements));
 }
