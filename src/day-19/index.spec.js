@@ -40,6 +40,23 @@ describe(title, function() {
                 }, replacements);
             });
 
+            it("should return an array of replacements left to 'key' and right to 'value'", function() {
+                const input = [
+                    "H => HO",
+                    "H => OH",
+                    "O => HH",
+                    "",
+                    "HOH"
+                ];
+                const {replacements} = parse(input);
+
+                expect(replacements).to.eql([
+                    {key: "H", value: "HO"},
+                    {key: "H", value: "OH"},
+                    {key: "O", value: "HH"},
+                ]);
+            });
+
             it("should return the molecule string, found the end of the input", function() {
                 const input = [
                     "H => HO",

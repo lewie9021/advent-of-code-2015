@@ -4,8 +4,15 @@ import _ from "lodash-fp";
 
 export const title = "Day 19: Medicine for Rudolph";
 
-export function parse() {
-    
+export function parse(input) {
+    return {
+        replacements: _.map((str) => {
+            const [key, value] = str.split(" => ");
+            
+            return {key, value};
+        }, _.take(input.length - 2, input)),
+        molecule: _.last(input)
+    };
 }
 
 export function run() {
