@@ -42,25 +42,24 @@ export function getDistinctMolecules(molecule, replacements) {
 }
 
 export function fabricateMolecule(start, target, replacements) {
-    const findTarget = (molecules, target, count = 1) => {
+    // Switch round the properties.
+    replacements = _.map(({key, value}) => ({key: value, value: key}), replacements);
+    
+    const seeds = _.filter(({value}) => value == start, replacements);
+    const findStart = (molecules, count = 0) => {
         return _.reduce((steps, molecule) => {
-            if (steps.length || molecule.length > target.length)
+            if (steps.length)
                 return steps;
 
-            if (molecule == target) {
-                console.log("count:", count);
-                
+            if (molecule == start)
                 return steps.concat(count);
-            }
             
             const transformed = getDistinctMolecules(molecule, replacements);
 
-            return steps.concat(findTarget(transformed, target, count + 1));
+            return steps.concat(findStart(transformed, count + 1));
         }, [], molecules);
     };
-
-    const seeds = _.filter(({key}) => key == start, replacements);
-    const values = findTarget(_.map(_.get("value"), seeds), target);
+    const values = findStart([target]);
 
     return (values.length) ? _.min(values) : null;
 }
