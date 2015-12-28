@@ -20,7 +20,7 @@ function getMatchIndexes(partial, string) {
     let array = [];
 
     while (pattern.exec(string)) {
-        array.push(pattern.lastIndex - 1);
+        array.push(pattern.lastIndex - partial.length);
     }
 
     return array;
@@ -46,6 +46,8 @@ export function getDistinctMolecules(molecule, replacements) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
+    const {molecule, replacements} = parse(input);
+    const count = getDistinctMolecules(molecule, replacements).length;
     
-    console.log("How many distinct molecules can be created after all the different ways you can do one replacement on the medicine molecule?");
+    console.log("How many distinct molecules can be created after all the different ways you can do one replacement on the medicine molecule?", count);
 }

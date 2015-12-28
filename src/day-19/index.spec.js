@@ -86,24 +86,49 @@ describe(title, function() {
             
             it("should return an array of molecule strings", function() {
                 const {molecule, replacements} = parse(this.input);
-                const molecules = getDistinctMolecules(molecule, replacements);
+                const result = getDistinctMolecules(molecule, replacements);
 
-                expect(molecules).to.be.an("array");
-                _.forEach(() => expect(molecules).to.be.a("string"));
+                expect(result).to.be.an("array");
+                _.forEach(() => expect(result).to.be.a("string"));
             });
 
             it("should not return any duplicates", function() {
                 const {molecule, replacements} = parse(this.input);
-                const molecules = getDistinctMolecules(molecule, replacements);
+                const result = getDistinctMolecules(molecule, replacements);
 
-                expect(_.unique(molecules).length).to.eq(molecules.length);
+                expect(_.unique(result).length).to.eq(result.length);
+            });
+
+            it("should replace keys with multiple characters", function() {
+                const input = [
+                    "Al => ThF",
+                    "",
+                    "iBSiAlArPBCaC"
+                ];
+                const {molecule, replacements} = parse(input);
+                const result = getDistinctMolecules(molecule, replacements);
+
+                expect(result.length).to.eq(1);
+                expect(result[0]).to.eq("iBSiThFArPBCaC");
             });
 
             it("should return exactly 4 distinct molecules, given the initial example", function() {
                 const {molecule, replacements} = parse(this.input);
-                const molecules = getDistinctMolecules(molecule, replacements);
+                const result = getDistinctMolecules(molecule, replacements);
+                const molecules = [
+                    "HOOH",
+                    "HOHO",
+                    "OHOH",
+                    "HHHH",
+                ];
 
-                expect(molecules.length).to.eq(4);
+                expect(result.length).to.eq(4);
+                
+                _.forEach((expected) => {
+                    const matches = _.filter((res) => _.isEqual(res, expected), result);
+
+                    expect(matches.length).to.eq(1);
+                }, molecules);
             });
 
             it("should return exactly 7 distinct molecules, given Santa's favourite molecule", function() {
@@ -114,11 +139,25 @@ describe(title, function() {
                     "",
                     "HOHOHO"
                 ];
-                
                 const {molecule, replacements} = parse(input);
-                const molecules = getDistinctMolecules(molecule, replacements);
+                const result = getDistinctMolecules(molecule, replacements);
+                const molecules = [
+                    "HOOHOHO",
+                    "HOHOOHO",
+                    "HOHOHOO",
+                    "OHOHOHO",
+                    "HHHHOHO",
+                    "HOHHHHO",
+                    "HOHOHHH"
+                ];
 
-                expect(molecules.length).to.eq(7);
+                expect(result.length).to.eq(7);
+                
+                _.forEach((expected) => {
+                    const matches = _.filter((res) => _.isEqual(res, expected), result);
+
+                    expect(matches.length).to.eq(1);
+                }, molecules);
             });
 
         });
