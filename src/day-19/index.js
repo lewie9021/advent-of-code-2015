@@ -43,6 +43,10 @@ export function getDistinctMolecules(molecule, replacements) {
     )(replacements);
 }
 
+export function fabricateMolecule(start, molecule, replacements) {
+    
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");

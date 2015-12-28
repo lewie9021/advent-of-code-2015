@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, getDistinctMolecules } from "./";
+import { title, parse, getDistinctMolecules, fabricateMolecule } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
@@ -164,4 +164,40 @@ describe(title, function() {
 
     });
 
+    describe("Part 2:", function() {
+
+        describe("fabricateMolecule", function() {
+
+            it("should return 3, given 'HOH' and the example replacements", function() {
+                const input = [
+                    "e => O",
+                    "O => HH",
+                    "H => OH",
+                    "",
+                    "HOH"
+                ];
+                const {molecule, replacements} = parse(input);
+                const result = fabricateMolecule("e", molecule, replacements);
+
+                expect(result).to.eq(3);
+            });
+
+            it("should return 6, given 'HOHOHO' and the example replacements", function() {
+                const input = [
+                    "e => O",
+                    "O => HH",
+                    "H => OH",
+                    "",
+                    "HOHOHO"
+                ];
+                const {molecule, replacements} = parse(input);
+                const result = fabricateMolecule("e", molecule, replacements);
+
+                expect(result).to.eq(6);
+            });
+            
+        });
+        
+    });
+    
 });
