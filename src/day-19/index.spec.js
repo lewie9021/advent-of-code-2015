@@ -170,9 +170,11 @@ describe(title, function() {
 
             it("should return 3, given 'HOH' and the example replacements", function() {
                 const input = [
+                    "e => H",
                     "e => O",
-                    "O => HH",
+                    "H => HO",
                     "H => OH",
+                    "O => HH",
                     "",
                     "HOH"
                 ];
@@ -184,9 +186,11 @@ describe(title, function() {
 
             it("should return 6, given 'HOHOHO' and the example replacements", function() {
                 const input = [
+                    "e => H",
                     "e => O",
-                    "O => HH",
+                    "H => HO",
                     "H => OH",
+                    "O => HH",
                     "",
                     "HOHOHO"
                 ];
