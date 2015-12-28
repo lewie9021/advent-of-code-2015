@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse } from "./";
+import { title, parse, getDistinctMolecules } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
@@ -70,6 +70,42 @@ describe(title, function() {
                 expect(molecule).to.eq("HOH");
             });
             
+        });
+
+        describe("getDistinctMolecules", function() {
+
+            beforeEach(function() {
+                this.input = [
+                    "H => HO",
+                    "H => OH",
+                    "O => HH",
+                    "",
+                    "HOH"
+                ];
+            });
+            
+            it("should return an array of molecule strings", function() {
+                const {molecule, replacements} = parse(this.input);
+                const molecules = getDistinctMolecules(molecule, replacements);
+
+                expect(molecules).to.be.an("array");
+                _.forEach(() => expect(molecules).to.be.a("string"));
+            });
+
+            it("should not return any duplicates", function() {
+                const {molecule, replacements} = parse(this.input);
+                const molecules = getDistinctMolecules(molecule, replacements);
+
+                expect(_.unique(molecules).length).to.eq(molecules.length);
+            });
+
+            it("should return exactly 4 distinct molecules, given the example", function() {
+                const {molecule, replacements} = parse(this.input);
+                const molecules = getDistinctMolecules(molecule, replacements);
+
+                expect(molecules.length).to.eq(4);
+            });
+
         });
 
     });

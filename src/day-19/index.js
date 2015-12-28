@@ -15,6 +15,10 @@ export function parse(input) {
     };
 }
 
+export function getDistinctMolecules() {
+    
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim().split("\n");
