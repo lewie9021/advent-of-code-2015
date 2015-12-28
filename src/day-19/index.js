@@ -15,8 +15,32 @@ export function parse(input) {
     };
 }
 
-export function getDistinctMolecules() {
-    
+function getMatchIndexes(partial, string) {
+    const pattern = new RegExp(partial, "g");
+    let array = [];
+
+    while (pattern.exec(string)) {
+        array.push(pattern.lastIndex - 1);
+    }
+
+    return array;
+}
+
+export function getDistinctMolecules(molecule, replacements) {
+    const getMolecules = ({key, value}) => {
+        return _.map((index) => {
+            const left = molecule.slice(0, index);
+            const right = molecule.slice(index + key.length, molecule.length);
+            
+            return `${left}${value}${right}`;
+        }, getMatchIndexes(key, molecule));
+    };
+
+    return _.compose(
+        _.unique,
+        _.flatten,
+        _.map(getMolecules)
+    )(replacements);
 }
 
 export function run() {

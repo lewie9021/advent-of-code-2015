@@ -99,11 +99,26 @@ describe(title, function() {
                 expect(_.unique(molecules).length).to.eq(molecules.length);
             });
 
-            it("should return exactly 4 distinct molecules, given the example", function() {
+            it("should return exactly 4 distinct molecules, given the initial example", function() {
                 const {molecule, replacements} = parse(this.input);
                 const molecules = getDistinctMolecules(molecule, replacements);
 
                 expect(molecules.length).to.eq(4);
+            });
+
+            it("should return exactly 7 distinct molecules, given Santa's favourite molecule", function() {
+                const input = [
+                    "H => HO",
+                    "H => OH",
+                    "O => HH",
+                    "",
+                    "HOHOHO"
+                ];
+                
+                const {molecule, replacements} = parse(input);
+                const molecules = getDistinctMolecules(molecule, replacements);
+
+                expect(molecules.length).to.eq(7);
             });
 
         });
