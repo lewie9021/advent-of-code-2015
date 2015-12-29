@@ -5,8 +5,8 @@ import { log } from "../helpers";
 
 export const title = "Day 20: Infinite Elves and Infinite Houses";
 
-export function getPresentCounts(target) {
-    const max = target / 10;
+export function getPresentCounts(target, increment, limit) {
+    const max = target / increment;
     
     return _.reduce((houses, multiple) => {
         const multiples = _.map((index) => {
@@ -14,15 +14,15 @@ export function getPresentCounts(target) {
         }, _.range(0, Math.floor(max / multiple)));
         
         _.forEach((x) => {
-            houses[x] = (houses[x] || 0) + (multiple * 10);
-        }, multiples);
+            houses[x] = (houses[x] || 0) + (multiple * increment);
+        }, limit ? multiples.slice(0, limit) : multiples);
 
         return houses;
     }, {}, _.range(1, max + 1));
 }
 
-export function getLowestHouseNumber(target) {
-    const counts = getPresentCounts(target);
+export function getLowestHouseNumber(target, increment = 10, limit) {
+    const counts = getPresentCounts(target, increment, limit);
 
     return _.compose(
         _.get("house"),
@@ -37,12 +37,13 @@ export function getLowestHouseNumber(target) {
                 presents: counts[key]
             };
         })
-    )(Object.keys(counts));
+    )(Object.keys(counts)) || null;
 }
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = _.parseInt(10, FS.readFileSync(inputPath, "utf-8").trim());
     
-    console.log("What is the lowest house number of the house to get at least as many presents as the number in your puzzle input?", getLowestHouseNumber(input));
+    console.log("Given infinite houses and 10 presents per delivery, what is the lowest house number of the house to get at least as many presents as the number in your puzzle input?", getLowestHouseNumber(input));
+    console.log("Given 50 houses and 11 presents per delivery, what is the new lowest house number of the house to get at least as many presents as the number in your puzzle input?", getLowestHouseNumber(input, 11, 50));
 }
