@@ -1,8 +1,18 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
+import { multiply } from "../helpers";
 
 export const title = "Day 20: Infinite Elves and Infinite Houses";
+
+export function getPresentCount(houseNumber) {
+    return _.compose(
+        _.sum,
+        _.map(multiply(10)),
+        _.filter((x) => houseNumber % x == 0),
+        _.range(1)
+    )(houseNumber + 1);
+}
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
