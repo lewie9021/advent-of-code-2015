@@ -14,6 +14,27 @@ export function getPresentCount(houseNumber) {
     )(houseNumber + 1);
 }
 
+export function getLowestHouseNumber(target) {
+    const firstMatch = (target, index = 0) => {
+        if (getPresentCount(index) >= target)
+            return index;
+
+        return firstMatch(target, index + 1);
+    };
+    const index = firstMatch(target);
+
+    return _.compose(
+        _.get("house"),
+        _.first,
+        _.sortByAll(["presents", "house"]),
+        _.filter(({presents}) => presents >= target),
+        _.map((count) => ({
+            house: index + count,
+            presents: getPresentCount(index + count)
+        }))
+    )(_.range(0, 3));
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();

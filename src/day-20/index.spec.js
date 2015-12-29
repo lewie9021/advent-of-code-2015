@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, getPresentCount } from "./";
+import { title, getPresentCount, getLowestHouseNumber } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
@@ -22,6 +22,21 @@ describe(title, function() {
             _.forEach((key) => {
                 it(`should return ${counts[key]}, given ${key}`, function() {
                     expect(getPresentCount(key)).to.eq(counts[key]);
+                });
+            }, Object.keys(counts));
+        });
+
+        describe("getLowestHouseNumber", function() {
+            const counts = {
+                20: 2,
+                60: 5,
+                100: 6,
+                150: 8
+            };
+
+            _.forEach((key) =>{ 
+                it(`should return ${counts[key]}, given ${key}`, function() {
+                    expect(getLowestHouseNumber(key)).to.eq(counts[key]);
                 });
             }, Object.keys(counts));
         });
