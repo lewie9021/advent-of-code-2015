@@ -1,7 +1,6 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
-import { log } from "../helpers";
 
 export const title = "Day 20: Infinite Elves and Infinite Houses";
 
@@ -9,13 +8,14 @@ export function getPresentCounts(target, increment, limit) {
     const max = target / increment;
     
     return _.reduce((houses, multiple) => {
+        const count = Math.floor(max / multiple);
         const multiples = _.map((index) => {
             return multiple + (index * multiple);
-        }, _.range(0, Math.floor(max / multiple)));
+        }, _.range(0, limit ? Math.min(limit, count) : count));
         
         _.forEach((x) => {
             houses[x] = (houses[x] || 0) + (multiple * increment);
-        }, limit ? multiples.slice(0, limit) : multiples);
+        }, multiples);
 
         return houses;
     }, {}, _.range(1, max + 1));
