@@ -1,6 +1,7 @@
 import _ from "lodash-fp";
 import { expect } from "chai";
 import { title, parse, simulate, getPermutations } from "./";
+import { fill } from "../helpers";
 
 // Notes / Rules:
 // - You vs Boss.
@@ -108,31 +109,31 @@ describe(title, function() {
         describe("getPermutations", function() {
 
             it("should return an array of arrays", function() {
-                const permutations = getPermutations([1, 1, 1, 1]);
+                const result = getPermutations([1, 1, 1, 1]);
                 const isArray = (x) => expect(x).to.be.an("array");
                 
-                isArray(permutations);
+                isArray(result);
 
-                _.forEach(isArray, permutations);
+                _.forEach(isArray, result);
             });
 
             it("should return arrays with a length which matches the blueprint", function() {
                 const test = (length) => {
-                    const blueprint = _.fill(1, Array(length));
-                    const permutations = getPermutations(blueprint);
+                    const blueprint = fill(1, Array(length));
+                    const result = getPermutations(blueprint);
                     const correctLength = _.compose(
-                        _.every(_.isEqual(blueprint.length)),
+                        _.every(_.isEqual(length)),
                         _.map(_.get("length"))
                     );
 
-                    expect(correctLength(permutations)).to.eq(true);
+                    expect(correctLength(result)).to.eq(true);
                 };
 
                 _.times(test, 10);
             });
 
             it("should return 8 permutations, given [1, 1, 1]", function() {
-                const permutations = getPermutations([1, 1, 1]);
+                const result = getPermutations([1, 1, 1]);
                 const expected = [
                     [0, 0, 0],
                     [0, 0, 1],
@@ -143,14 +144,18 @@ describe(title, function() {
                     [1, 1, 0],
                     [1, 1, 1]
                 ];
+                
+                expect(result.length).to.eq(expected.length);
 
-                expect(permutations.length).to.eq(expected.length);
+                _.forEach((expected) => {
+                    const match = _.filter((res) => _.isEqual(res, expected), result);
 
-                // TODO: ensure each expected permuation is present.
+                    expect(match.length).to.eq(1);
+                }, result);
             });
 
             it("should return 12 permutations, given [2, 1, 1]", function() {
-                const permutations = getPermutations([2, 1, 1]);
+                const result = getPermutations([2, 1, 1]);
                 const expected = [
                     [0, 0, 0],
                     [0, 0, 1],
@@ -166,9 +171,13 @@ describe(title, function() {
                     [2, 1, 1]
                 ];
 
-                expect(permutations.length).to.eq(expected.length);
+                expect(result.length).to.eq(expected.length);
 
-                // TODO: ensure each expected permuation is present.
+                _.forEach((expected) => {
+                    const match = _.filter((res) => _.isEqual(res, expected), result);
+
+                    expect(match.length).to.eq(1);
+                }, result);
             });
             
         });

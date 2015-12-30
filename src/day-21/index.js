@@ -25,6 +25,17 @@ export function simulate(player, opponent) {
     return turns(player, opponent) <= turns(opponent, player);
 }
 
+export function getPermutations(blueprint, partial = [], result = []) {
+    if (!blueprint.length)
+        result.push(partial);
+
+    _.map((value) => {
+        getPermutations(blueprint.slice(1), partial.concat(value), result);
+    }, _.range(0, _.first(blueprint) + 1));
+    
+    return result;
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
