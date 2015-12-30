@@ -69,28 +69,38 @@ describe(title, function() {
                     damage: 5,
                     armor: 5
                 };
-                const boss = {
+                const opponent = {
                     health: 12,
                     damage: 7,
                     armor: 2
                 };
                 
-                expect(simulate(player, boss)).to.eq(true);
+                expect(simulate(player, opponent)).to.eq(true);
             });
 
-            it("should return false, given the example scenario (flipped)", function() {
+            it("should return true, given matching stats", function() {
                 const player = {
                     health: 8,
                     damage: 5,
                     armor: 5
                 };
-                const boss = {
+
+                expect(simulate(player, player)).to.eq(true);
+            });
+
+            it("should return false, given 'opponent' wins", function() {
+                const player = {
+                    health: 8,
+                    damage: 5,
+                    armor: 5
+                };
+                const opponent = {
                     health: 12,
-                    damage: 7,
+                    damage: 50,
                     armor: 2
                 };
                 
-                expect(simulate(boss, player)).to.eq(true);
+                expect(simulate(player, opponent)).to.eq(false);
             });
             
         });

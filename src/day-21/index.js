@@ -19,6 +19,12 @@ export function parse(input) {
     };
 }
 
+export function simulate(player, opponent) {
+    const turns = (x, y) => Math.ceil(y.health / Math.max(1, x.damage - y.armor));
+
+    return turns(player, opponent) <= turns(opponent, player);
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
