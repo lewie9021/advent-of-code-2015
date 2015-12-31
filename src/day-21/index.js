@@ -89,7 +89,10 @@ export function getLeastGoldAndWin({weapons, armor, rings}, {health}, opponent) 
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
+    const shopPath = Path.join(__dirname, "shop.json");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
-    
-    console.log("What is the least amount of gold you can spend and still win the fight?");
+    const shop = JSON.parse(FS.readFileSync(shopPath, "utf-8"));
+    const opponent = parse(input);
+
+    console.log("What is the least amount of gold you can spend and still win the fight?", getLeastGoldAndWin(shop, {health: 100}, opponent));
 }
