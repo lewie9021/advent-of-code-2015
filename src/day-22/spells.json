@@ -1,0 +1,33 @@
+[
+    {
+        "name": "Magic Missile",
+        "cost": 53,
+        "damage": 4,
+        "turns": 0
+    },
+    {
+        "name": "Drain",
+        "cost": 73
+        "damage": 2,
+        "health": 2,
+        "turns": 0
+    },
+    {
+        "name": "Shield",
+        "cost": 113
+        "armor": 7,
+        "turns": 6
+    },
+    {
+        "name": "Poison",
+        "cost": 173
+        "damage": 3,
+        "turns": 6
+    },
+    {
+        "name": "Recharge",
+        "cost": 229
+        "mana": 101
+        "turns": 5
+    }
+]
