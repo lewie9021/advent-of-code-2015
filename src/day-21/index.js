@@ -36,15 +36,10 @@ export function getPermutations(blueprint, partial = [], result = []) {
     return result;
 }
 
-export function getLeastGoldAndWin({weapons, armor, rings}, {health}, opponent) {
+function getFightOutcomes({weapons, armor, rings}, health, opponent) {
     const slots = [weapons, armor, rings, rings];
     
     return _.compose(
-        _.get("cost"),
-        _.first,
-        _.sortBy("cost"),
-        // Filter only the loadouts that won.
-        _.filter(_.get("win")),
         // Simulate each loadout.
         _.map((player) => ({
             win: simulate(player, opponent),
@@ -85,8 +80,31 @@ export function getLeastGoldAndWin({weapons, armor, rings}, {health}, opponent) 
         // Convert the slots array to their length values.
         _.map(_.get("length"))
     )(slots);
-}    
+}
 
+export function getLeastGoldAndWin(shop, health, opponent) {
+    const outcomes = getFightOutcomes(shop, health, opponent);
+
+    return _.compose(
+        _.get("cost"),
+        _.first,
+        _.sortBy("cost"),
+        // Filter only the loadouts that won.
+        _.filter(_.get("win"))
+    )(outcomes);
+}
+
+export function getMostGoldAndLose(shop, health, opponent) {
+    const outcomes = getFightOutcomes(shop, health, opponent);
+    
+    return _.compose(
+        _.get("cost"),
+        _.last,
+        _.sortBy("cost"),
+        // Filter only the loadouts that lost.
+        _.filter(_.negate(_.get("win")))
+    )(outcomes);
+}
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const shopPath = Path.join(__dirname, "shop.json");
@@ -94,5 +112,6 @@ export function run() {
     const shop = JSON.parse(FS.readFileSync(shopPath, "utf-8"));
     const opponent = parse(input);
 
-    console.log("What is the least amount of gold you can spend and still win the fight?", getLeastGoldAndWin(shop, {health: 100}, opponent));
+    console.log("What is the least amount of gold you can spend and still win the fight?", getLeastGoldAndWin(shop, 100, opponent));
+    console.log("What is the most amount of gold you can spend and still lose the fight?", getMostGoldAndLose(shop, 100, opponent));
 }

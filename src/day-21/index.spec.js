@@ -1,20 +1,7 @@
 import _ from "lodash-fp";
 import { expect } from "chai";
-import { title, parse, simulate, getPermutations } from "./";
+import { title, parse, simulate, getPermutations, getLeastGoldAndWin, getMostGoldAndLose } from "./";
 import { fill } from "../helpers";
-
-// Notes / Rules:
-// - You vs Boss.
-// - You always go first.
-// - An attack will always deduct at least 1 hit point.
-// - Damage dealt = Math.max(1, attacker's damage - defender's armor).
-// - Start with no items, unlimited gold.
-// - You have 100 hit points.
-// - Weapon isn't optional, must have one.
-// - Armour is optional, can have just one.
-// - Rings are optional, can have up to two.
-// - All items bought must be used.
-// - Can't buy duplicate items (rings).
 
 describe(title, function() {
 
@@ -220,10 +207,6 @@ describe(title, function() {
             });
             
             it("should return 2 given 10 health and the example opponent", function() {
-                const player = {
-                    gold: Infinity,
-                    health: 10
-                };
                 const opponent = {
                     health: 12,
                     damage: 8,
@@ -262,14 +245,10 @@ describe(title, function() {
                 // 1, 1, 0, 2 = 4 cost, 5 damage, 14 armor
                 // 1, 1, 2, 0
 
-                expect(getLeastGoldAndWin(this.shop, player, opponent)).to.eq(2);
+                expect(getLeastGoldAndWin(this.shop, 10, opponent)).to.eq(2);
             });
 
-            it("should return 3 given 10 health and the example opponent", function() {
-                const player = {
-                    gold: Infinity,
-                    health: 2
-                };
+            it("should return 3 given 2 health and the example opponent", function() {
                 const opponent = {
                     health: 12,
                     damage: 8,
@@ -308,12 +287,139 @@ describe(title, function() {
                 // 1, 1, 0, 2 = 4 cost, 5 damage, 14 armor
                 // 1, 1, 2, 0
 
-                expect(getLeastGoldAndWin(this.shop, player, opponent)).to.eq(3);
+                expect(getLeastGoldAndWin(this.shop, 2, opponent)).to.eq(3);
             });
             
         });
 
     });
 
+    describe("Part2:", function() {
+
+        describe("getMostGoldAndLose", function() {
+
+            before(function() {
+                const weapons = [
+                    {
+                        cost: 1,
+                        damage: 5,
+                        armor: 0
+                    }
+                ];
+                const armor = [
+                    {
+                        cost: 1,
+                        damage: 0,
+                        armor: 10
+                    }
+                ];
+                const rings = [
+                    {
+                        cost: 1,
+                        damage: 4,
+                        armor: 0
+                    },
+                    {
+                        cost: 2,
+                        damage: 0,
+                        armor: 4
+                    }
+                ];
+
+                this.shop = {
+                    weapons,
+                    armor,
+                    rings
+                };
+            });
+            
+            it("should return 3 given 10 health and the example opponent", function() {
+                const opponent = {
+                    health: 12,
+                    damage: 8,
+                    armor: 2
+                };
+
+                // win: false
+                // 1, 0, 0, 0 = 1 cost, 5 damage, 0 armor.
+                // 1, 0, 0, 0
+
+                // win: true
+                // 1, 0, 0, 1 = 2 cost, 9 damage, 0 armor
+                // 1, 0, 1, 0
+
+                // win: true
+                // 1, 0, 1, 2 = 4 cost, 9 damage, 4 armor
+                // 1, 0, 2, 1
+
+                // win: false
+                // 1, 0, 0, 2 = 3 cost, 5 damage, 4 armor
+                // 1, 0, 2, 0
+
+                // win: true
+                // 1, 1, 0, 0 = 2 cost, 5 damage, 10 armor.
+                // 1, 1, 0, 0
+
+                // win: true
+                // 1, 1, 1, 0 = 3 cost, 9 damage, 10 armor.
+                // 1, 1, 0, 1
+
+                // win: true
+                // 1, 1, 1, 2 = 5 cost, 9 damage, 14 armor.
+                // 1, 1, 2, 1
+
+                // win: true
+                // 1, 1, 0, 2 = 4 cost, 5 damage, 14 armor
+                // 1, 1, 2, 0
+
+                expect(getMostGoldAndLose(this.shop, 10, opponent)).to.eq(3);
+            });
+
+            it("should return 4 given 2 health and the example opponent", function() {
+                const opponent = {
+                    health: 12,
+                    damage: 8,
+                    armor: 2
+                };
+
+                // win: false
+                // 1, 0, 0, 0 = 1 cost, 5 damage, 0 armor.
+                // 1, 0, 0, 0
+
+                // win: false
+                // 1, 0, 0, 1 = 2 cost, 9 damage, 0 armor
+                // 1, 0, 1, 0
+
+                // win: false
+                // 1, 0, 1, 2 = 4 cost, 9 damage, 4 armor
+                // 1, 0, 2, 1
+
+                // win: false
+                // 1, 0, 0, 2 = 3 cost, 5 damage, 4 armor
+                // 1, 0, 2, 0
+
+                // win: false
+                // 1, 1, 0, 0 = 2 cost, 5 damage, 10 armor.
+                // 1, 1, 0, 0
+
+                // win: true
+                // 1, 1, 1, 0 = 3 cost, 9 damage, 10 armor.
+                // 1, 1, 0, 1
+
+                // win: true
+                // 1, 1, 1, 2 = 5 cost, 9 damage, 14 armor.
+                // 1, 1, 2, 1
+
+                // win: false
+                // 1, 1, 0, 2 = 4 cost, 5 damage, 14 armor
+                // 1, 1, 2, 0
+
+                expect(getMostGoldAndLose(this.shop, 2, opponent)).to.eq(4);
+            });
+            
+        });
+        
+    });
+    
 });
 
