@@ -5,6 +5,8 @@ export const split = _.curry((delimiter, str) => str.split(delimiter));
 
 export const join = _.curry((delimiter, str) => str.join(delimiter));
 
+export const match = _.curry((pattern, str) => str.match(pattern));
+
 export const multiply = _.curry((x, y) => x * y, 2);
 
 export const merge = (f, ...values) => __.merge(...values, f);
@@ -22,7 +24,7 @@ export function log(x) {
 export const groupBy = _.curryRight(__.groupBy, 2);
 
 // A less annoying _.fill function.
-export const fill = _.curry((x, arr) => _.map(() => x, arr));
+export const fill = (x, collection) => _.map(_.constant(x), collection);
 
 export const doWhile = _.curry((f, g, x) => {
     let y = f(x);
