@@ -116,7 +116,7 @@ describe(title, function() {
                 }]);
             });
 
-            it("should return an array with 1 combination, given two damage spell", function() {
+            it("should return an array with 4 combination, given two damage spell", function() {
                 const spells = [
                     {
                         name: "Spell One",
@@ -140,37 +140,100 @@ describe(title, function() {
                     damage: 1
                 };
 
-                // Use spell one x3, killing the opponent.
-                // [1, 1, 1]
-
-                // Combination of both spells, killing the opponent.
-                // [1, 2]
-                // [2, 1]
-                
-                // We ran out of mana. We lose.
-                // [2, 2]
-
-                const result = getCombinations(spells, player, opponent);
-
                 // TODO: We don't care about order though .eql does.
-                expect(result).to.eql([
+                expect(getCombinations(spells, player, opponent)).to.eql([
+                    // Use spell one x3. Opponent killed.
                     {
+                        // [1, 1, 1]
                         win: true,
                         mana: 96
                     },
+                    // Combination of both spells. Opponent killed.
                     {
+                        // [1, 2]
                         win: true,
                         mana: 92
                     },
                     {
+                        // [2, 1]
                         win: true,
                         mana: 92
                     },
+                    // Use spell two x2. Out of mana.
                     {
+                        // [2, 2]
                         win: false,
                         mana: 120
                     }
                 ]);
+            });
+
+            it("should return an array of 7 combinations, given damage and heal spells", function() {
+                const spells = [
+                    {
+                        name: "Spell One",
+                        cost: 32,
+                        damage: 2,
+                        turns: 0
+                    },
+                    {
+                        name: "Spell Two",
+                        cost: 65,
+                        health: 5,
+                        turns: 0
+                    }
+                ];
+                const player = {
+                    health: 10,
+                    mana: 100
+                };
+                const opponent = {
+                    health: 6,
+                    damage: 1
+                };
+                
+                // TODO: We don't care about order though .eql does.
+                expect(getCombinations(spells, player, opponent)).to.eql([
+                    // Use spell one x3. Opponent killed.
+                    {
+                        // [1, 1, 1]
+                        win: true,
+                        mana: 96
+                    },
+                    // Combination of both spells. Out of mana.
+                    {
+                        // [1, 1, 2]
+                        win: false,
+                        mana: 162
+                    },
+                    {
+                        // [1, 2, 1]
+                        win: false,
+                        mana: 129
+                    },
+                    {
+                        // [1, 2, 2]
+                        win: false,
+                        mana: 162
+                    },
+                    {
+                        // [2, 1, 1]
+                        win: false,
+                        mana: 162
+                    },
+                    {
+                        // [2, 1, 2]
+                        win: false,
+                        mana: 129
+                    },
+                    // Use spell two x2. Out of mana.
+                    {
+                        // [2, 2]
+                        win: false,
+                        mana: 130
+                    }
+                ]);
+                
             });
             
         });
