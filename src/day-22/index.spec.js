@@ -143,28 +143,12 @@ describe(title, function() {
                 // TODO: We don't care about order though .eql does.
                 expect(getCombinations(spells, player, opponent)).to.eql([
                     // Use spell one x3. Opponent killed.
-                    {
-                        // [1, 1, 1]
-                        win: true,
-                        mana: 96
-                    },
+                    {win: true, mana: 96}, // [1, 1, 1]
                     // Combination of both spells. Opponent killed.
-                    {
-                        // [1, 2]
-                        win: true,
-                        mana: 92
-                    },
-                    {
-                        // [2, 1]
-                        win: true,
-                        mana: 92
-                    },
+                    {win: true, mana: 92}, // [1, 2]
+                    {win: true, mana: 92}, // [2, 1]
                     // Use spell two x2. Out of mana.
-                    {
-                        // [2, 2]
-                        win: false,
-                        mana: 120
-                    }
+                    {win: false, mana: 120} // [2, 2]
                 ]);
             });
 
@@ -195,43 +179,15 @@ describe(title, function() {
                 // TODO: We don't care about order though .eql does.
                 expect(getCombinations(spells, player, opponent)).to.eql([
                     // Use spell one x3. Opponent killed.
-                    {
-                        // [1, 1, 1]
-                        win: true,
-                        mana: 96
-                    },
+                    {win: true, mana: 96}, // [1, 1, 1]
                     // Combination of both spells. Out of mana.
-                    {
-                        // [1, 1, 2]
-                        win: false,
-                        mana: 162
-                    },
-                    {
-                        // [1, 2, 1]
-                        win: false,
-                        mana: 129
-                    },
-                    {
-                        // [1, 2, 2]
-                        win: false,
-                        mana: 162
-                    },
-                    {
-                        // [2, 1, 1]
-                        win: false,
-                        mana: 162
-                    },
-                    {
-                        // [2, 1, 2]
-                        win: false,
-                        mana: 129
-                    },
+                    {win: false, mana: 162}, // [1, 1, 2]
+                    {win: false, mana: 129}, // [1, 2, 1]
+                    {win: false, mana: 162}, // [1, 2, 2]
+                    {win: false, mana: 162}, // [2, 1, 1]
+                    {win: false, mana: 129}, // [2, 1, 2]
                     // Use spell two x2. Out of mana.
-                    {
-                        // [2, 2]
-                        win: false,
-                        mana: 130
-                    }
+                    {win: false, mana: 130} // [2, 2]
                 ]);
                 
             });
