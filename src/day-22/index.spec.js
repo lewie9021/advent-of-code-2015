@@ -238,6 +238,50 @@ describe(title, function() {
                 ]);
                 
             });
+
+            it("should return an array of 8 combinations, given damage and mana spells", function() {
+                const spells = [
+                    {
+                        name: "Spell One",
+                        cost: 32,
+                        damage: 2,
+                        turns: 0
+                    },
+                    {
+                        name: "Spell Two",
+                        cost: 30,
+                        mana: 45,
+                        turns: 2
+                    }
+                ];
+                const player = {
+                    health: 10,
+                    mana: 100
+                };
+                const opponent = {
+                    health: 6,
+                    damage: 4
+                };
+
+                // TODO: We don't care about order though .eql does.
+                // Do not include mana recharge effects as "spending" negative mana.
+                expect(getCombinations(spells, player, opponent)).to.eql([
+                    // Use spell one x3. Opponent killed.
+                    {win: true, mana: 96}, // [1, 1, 1]
+                    
+                    // Combination of both spells. Player killed.
+                    {win: false, mana: 94}, // [1, 1, 2]
+                    {win: false, mana: 94}, // [1, 2, 1]
+                    {win: false, mana: 92}, // [1, 2, 2]
+                    {win: false, mana: 92}, // [2, 1, 1]
+                    {win: false, mana: 92}, // [2, 2, 1]
+                    {win: false, mana: 92}, // [2, 1, 2]
+
+                    // Use spell two x3. Player killed.
+                    {win: false, mana: 90}, // [2, 2, 2]
+                ]);
+                
+            });
             
         });
 
