@@ -1,8 +1,17 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
+import { split, match } from "../helpers";
 
 export const title = "Day 22: Wizard Simulator 20XX";
+
+export const parse = _.compose(
+    _.zipObject(["health", "damage"]),
+    _.map(_.parseInt(10)),
+    _.map(_.first),
+    _.map(match(/\d+$/)),
+    split("\n")
+);
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
