@@ -144,9 +144,11 @@ describe(title, function() {
                 expect(getCombinations(spells, player, opponent)).to.eql([
                     // Use spell one x3. Opponent killed.
                     {win: true, mana: 96}, // [1, 1, 1]
+                    
                     // Combination of both spells. Opponent killed.
                     {win: true, mana: 92}, // [1, 2]
                     {win: true, mana: 92}, // [2, 1]
+                    
                     // Use spell two x2. Out of mana.
                     {win: false, mana: 120} // [2, 2]
                 ]);
@@ -179,15 +181,60 @@ describe(title, function() {
                 // TODO: We don't care about order though .eql does.
                 expect(getCombinations(spells, player, opponent)).to.eql([
                     // Use spell one x3. Opponent killed.
+                    
                     {win: true, mana: 96}, // [1, 1, 1]
+                    
                     // Combination of both spells. Out of mana.
                     {win: false, mana: 162}, // [1, 1, 2]
                     {win: false, mana: 129}, // [1, 2, 1]
                     {win: false, mana: 162}, // [1, 2, 2]
                     {win: false, mana: 162}, // [2, 1, 1]
                     {win: false, mana: 129}, // [2, 1, 2]
+                    
                     // Use spell two x2. Out of mana.
                     {win: false, mana: 130} // [2, 2]
+                ]);
+                
+            });
+
+            it("should return an array of 7 combinations, given damage and armor spells", function() {
+                const spells = [
+                    {
+                        name: "Spell One",
+                        cost: 32,
+                        damage: 2,
+                        turns: 0
+                    },
+                    {
+                        name: "Spell Two",
+                        cost: 30,
+                        armor: 2,
+                        turns: 4
+                    }
+                ];
+                const player = {
+                    health: 10,
+                    mana: 100
+                };
+                const opponent = {
+                    health: 6,
+                    damage: 4
+                };
+
+                // TODO: We don't care about order though .eql does.
+                expect(getCombinations(spells, player, opponent)).to.eql([
+                    // Use spell one x3. Opponent killed.
+                    {win: true, mana: 96}, // [1, 1, 1]
+                    
+                    // Combination of both spells. Player killed.
+                    {win: false, mana: 94}, // [1, 1, 2]
+                    
+                    // Combination of both spells. Out of mana.
+                    {win: false, mana: 126}, // [1, 2, 1, 1]
+                    {win: false, mana: 124}, // [1, 2, 1, 2]
+                    {win: false, mana: 126}, // [2, 1, 1, 1]
+                    {win: false, mana: 124}, // [2, 1, 1, 2]
+                    {win: false, mana: 124}, // [2, 1, 2, 1]
                 ]);
                 
             });
