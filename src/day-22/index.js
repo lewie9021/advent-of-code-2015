@@ -19,7 +19,7 @@ export function simulate(spells, player, opponent) {
         return assign({id}, spells[id], {});
     }, _.range(0, spells.length));
     // Assign a spent property which will increase on each spell purchase.
-    player = assign({spent: 0}, player, {});
+    player = assign({spent: 0, armor: 0}, player, {});
     
     const getCombinations = (player, opponent, effects, turn = 0, results = []) => {
         // We die, or run out of mana.
@@ -63,10 +63,12 @@ export function simulate(spells, player, opponent) {
             effects[key] = value - 1;
         }, effects);
 
-        if (turn % 0)
+        if (turn % 2) {
             // Opponent's turn.
-            player.health -= opponent.damage;
-        else
+            player.health -= Math.max(1, opponent.damage - player.armor);
+
+            getCombinations(player, opponent, effects, turn + 1, results);
+        } else {
             // Our turn, select a spell.
             _.compose(
                 _.forEach((spell) => {
@@ -74,17 +76,20 @@ export function simulate(spells, player, opponent) {
                     const newPlayer = assign({
                         mana: player.mana - spell.cost,
                         spent: player.spent + spell.cost,
-                        health: player.health + (!spell.turns && spell.health || 0)
+                        armor: player.armor + (spell.armor || 0),
+                        health: player.health + (spell.health || 0)
                     }, player, {});
                     const newOpponent = assign({
                         health: opponent.health - (!spell.turns && spell.damage || 0)
                     }, opponent, {});
+                    const newEffects = assign({[spell.id]: spell.turns}, effects, {});
                     
-                    getCombinations(newPlayer, newOpponent, effects, turn + 1, results);
+                    getCombinations(newPlayer, newOpponent, newEffects, turn + 1, results);
                 }),
                 // Can't select a spell that's already in effect.
                 _.filter(({id}) => !effects[id])
             )(spells);
+        }
         
         return results;
     };

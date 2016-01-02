@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { title, parse, simulate } from "./";
 
-describe.only(title, function() {
+describe(title, function() {
 
     describe("Part 1:", function() {
 
@@ -199,7 +199,7 @@ describe.only(title, function() {
                 
             });
 
-            xit("should return an array of 7 outcomes, given damage and armor spells", function() {
+            it("should return an array of 7 outcomes, given damage and armor spells", function() {
                 const spells = [
                     {
                         name: "Spell One",
@@ -241,7 +241,7 @@ describe.only(title, function() {
                 
             });
 
-            xit("should return an array of 8 outcomes, given damage and mana spells", function() {
+            it("should return an array of 8 outcomes, given damage and mana spells", function() {
                 const spells = [
                     {
                         name: "Spell One",
