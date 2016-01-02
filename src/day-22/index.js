@@ -20,15 +20,21 @@ export function simulate(spells, player, opponent) {
     }, _.range(0, spells.length));
     // Assign a spent property which will increase on each spell purchase.
     player = assign({spent: 0, armor: 0}, player, {});
-    
+
+    let bestSpent;
     const getCombinations = (player, opponent, effects, turn = 0, results = []) => {
+        if (bestSpent && player.spent >= bestSpent)
+            return results;
+        
         // We die, or run out of mana.
         if (player.health <= 0 || player.mana < 0)
             return results.push({win: false, mana: player.spent});
-        
+            
         // We kill the opponent.
-        if (opponent.health <= 0)
+        if (opponent.health <= 0) {
+            bestSpent = player.spent; 
             return results.push({win: true, mana: player.spent});
+        }
         
         // Clone each parameter to prevent unwanted mutations.
         player = _.clone(player);
@@ -62,26 +68,27 @@ export function simulate(spells, player, opponent) {
             // Deduct the timer value.
             effects[key] = value - 1;
         }, effects);
-
+        
         if (turn % 2) {
             // Opponent's turn.
             player.health -= Math.max(1, opponent.damage - player.armor);
-
+            
             getCombinations(player, opponent, effects, turn + 1, results);
         } else {
             // Our turn, select a spell.
             _.compose(
                 _.forEach((spell) => {
                     // TODO: We basically cast the spell. Maybe a separate function?
-                    const newPlayer = assign({
+                    const newPlayer = {
                         mana: player.mana - spell.cost,
                         spent: player.spent + spell.cost,
                         armor: player.armor + (spell.armor || 0),
-                        health: player.health + (spell.health || 0)
-                    }, player, {});
-                    const newOpponent = assign({
-                        health: opponent.health - (!spell.turns && spell.damage || 0)
-                    }, opponent, {});
+                        health: player.health + (!spell.turns && spell.health || 0)
+                    };
+                    const newOpponent = {
+                        health: opponent.health - (!spell.turns && spell.damage || 0),
+                        damage: opponent.damage
+                    };
                     const newEffects = assign({[spell.id]: spell.turns}, effects, {});
                     
                     getCombinations(newPlayer, newOpponent, newEffects, turn + 1, results);
