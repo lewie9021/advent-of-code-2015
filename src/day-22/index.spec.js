@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, getCombinations } from "./";
+import { title, parse, simulate } from "./";
 
 describe(title, function() {
 
@@ -38,13 +38,13 @@ describe(title, function() {
             
         });
 
-        describe("getCombinations", function() {
+        describe("simulate", function() {
 
-            it("should return an array, given an array of spells, a player and an opponent", function() {
+            it("should return an array, given a list of spells, a player and an opponent", function() {
                 const spells = [];
                 const player = {};
                 const opponent = {};
-                const result = getCombinations(spells, player, opponent);
+                const result = simulate(spells, player, opponent);
                 
                 expect(result).to.be.an("array");
                 expect(result).to.be.empty;
@@ -66,13 +66,13 @@ describe(title, function() {
                     damage: 1
                 };
 
-                getCombinations(spells, player, opponent).forEach((combination) => {
-                    expect(combination).to.be.an("object");
-                    expect(combination).to.have.all.keys(["win", "mana"]);
+                simulate(spells, player, opponent).forEach((outcome) => {
+                    expect(outcome).to.be.an("object");
+                    expect(outcome).to.have.all.keys(["win", "mana"]);
                 });
             });
 
-            it("should return an array with 1 combination, given a simple damage spell", function() {
+            it("should return an array with 1 outcome, given a simple damage spell", function() {
                 const spells = [{
                     name: "Spell One",
                     cost: 32,
@@ -108,7 +108,7 @@ describe(title, function() {
                 // Player = {health: 8, mana: 4}
                 // Opponent = {health: 0}
 
-                const result = getCombinations(spells, player, opponent);
+                const result = simulate(spells, player, opponent);
                 
                 expect(result).to.eql([{
                     win: true,
@@ -116,7 +116,7 @@ describe(title, function() {
                 }]);
             });
 
-            it("should return an array with 4 combination, given two damage spell", function() {
+            it("should return an array with 4 outcomes, given two damage spell", function() {
                 const spells = [
                     {
                         name: "Spell One",
@@ -141,7 +141,7 @@ describe(title, function() {
                 };
 
                 // TODO: We don't care about order though .eql does.
-                expect(getCombinations(spells, player, opponent)).to.eql([
+                expect(simulate(spells, player, opponent)).to.eql([
                     // Use spell one x3. Opponent killed.
                     {win: true, mana: 96}, // [1, 1, 1]
                     
@@ -154,7 +154,7 @@ describe(title, function() {
                 ]);
             });
 
-            it("should return an array of 7 combinations, given damage and heal spells", function() {
+            it("should return an array of 7 outcomes, given damage and heal spells", function() {
                 const spells = [
                     {
                         name: "Spell One",
@@ -179,7 +179,7 @@ describe(title, function() {
                 };
                 
                 // TODO: We don't care about order though .eql does.
-                expect(getCombinations(spells, player, opponent)).to.eql([
+                expect(simulate(spells, player, opponent)).to.eql([
                     // Use spell one x3. Opponent killed.
                     
                     {win: true, mana: 96}, // [1, 1, 1]
@@ -197,7 +197,7 @@ describe(title, function() {
                 
             });
 
-            it("should return an array of 7 combinations, given damage and armor spells", function() {
+            it("should return an array of 7 outcomes, given damage and armor spells", function() {
                 const spells = [
                     {
                         name: "Spell One",
@@ -222,7 +222,7 @@ describe(title, function() {
                 };
 
                 // TODO: We don't care about order though .eql does.
-                expect(getCombinations(spells, player, opponent)).to.eql([
+                expect(simulate(spells, player, opponent)).to.eql([
                     // Use spell one x3. Opponent killed.
                     {win: true, mana: 96}, // [1, 1, 1]
                     
@@ -239,7 +239,7 @@ describe(title, function() {
                 
             });
 
-            it("should return an array of 8 combinations, given damage and mana spells", function() {
+            it("should return an array of 8 outcomes, given damage and mana spells", function() {
                 const spells = [
                     {
                         name: "Spell One",
@@ -265,7 +265,7 @@ describe(title, function() {
 
                 // TODO: We don't care about order though .eql does.
                 // Do not include mana recharge effects as "spending" negative mana.
-                expect(getCombinations(spells, player, opponent)).to.eql([
+                expect(simulate(spells, player, opponent)).to.eql([
                     // Use spell one x3. Opponent killed.
                     {win: true, mana: 96}, // [1, 1, 1]
                     
