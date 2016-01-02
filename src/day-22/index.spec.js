@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, simulate } from "./";
+import { title, parse, simulate, getLeastManaAndWin } from "./";
 
 describe(title, function() {
 
@@ -283,6 +283,31 @@ describe(title, function() {
                     {win: false, mana: 90}, // [2, 2, 2]
                 ]);
                 
+            });
+            
+        });
+
+        describe("getLeastManaAndWin", function() {
+
+            it("should return 30, given {win, 30}, {lose, 10}, {win: 40}", function() {
+                const outcomes = [
+                    {win: true, mana: 30},
+                    {win: false, mana: 10},
+                    {win: true, mana: 47}
+                ];
+
+                expect(getLeastManaAndWin(outcomes)).to.eq(30);
+            });
+
+            it("should return 54, given {win, 95}, {lose, 44}, {lose 54}, {win: 54}", function() {
+                const outcomes = [
+                    {win: true, mana: 95},
+                    {win: false, mana: 44},
+                    {win: false, mana: 54},
+                    {win: true, mana: 54}
+                ];
+
+                expect(getLeastManaAndWin(outcomes)).to.eq(54);
             });
             
         });

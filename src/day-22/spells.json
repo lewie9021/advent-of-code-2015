@@ -7,27 +7,27 @@
     },
     {
         "name": "Drain",
-        "cost": 73
+        "cost": 73,
         "damage": 2,
         "health": 2,
         "turns": 0
     },
     {
         "name": "Shield",
-        "cost": 113
+        "cost": 113,
         "armor": 7,
         "turns": 6
     },
     {
         "name": "Poison",
-        "cost": 173
+        "cost": 173,
         "damage": 3,
         "turns": 6
     },
     {
         "name": "Recharge",
-        "cost": 229
-        "mana": 101
+        "cost": 229,
+        "mana": 101,
         "turns": 5
     }
 ]

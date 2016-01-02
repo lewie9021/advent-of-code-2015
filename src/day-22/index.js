@@ -99,9 +99,24 @@ export function simulate(spells, player, opponent) {
     }, {}, _.range(0, spells.length)));
 }
 
+export const getLeastManaAndWin = _.compose(
+    _.get("mana"),
+    _.first,
+    _.sortBy("mana"),
+    // Filter only the loadouts that won.
+    _.filter(_.get("win"))
+);
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
+    const spellsPath = Path.join(__dirname, "spells.json");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
+    const spells = JSON.parse(FS.readFileSync(spellsPath, "utf-8"));
+    const opponent = parse(input);
+    const player = {
+        health: 50,
+        mana: 500
+    };
     
-    console.log("What is the least amount of mana you can spend and still win the fight?");
+    console.log("What is the least amount of mana you can spend and still win the fight?", getLeastManaAndWin(simulate(spells, player, opponent)));
 }
