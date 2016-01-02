@@ -22,14 +22,14 @@ export function simulate(spells, player, opponent) {
     player = assign({spent: 0}, player, {});
     
     const getCombinations = (player, opponent, effects, turn = 0, results = []) => {
+        // We die, or run out of mana.
+        if (player.health <= 0 || player.mana < 0)
+            return results.push({win: false, mana: player.spent});
+        
         // We kill the opponent.
         if (opponent.health <= 0)
             return results.push({win: true, mana: player.spent});
         
-        // We die, or run out of mana.
-        if (player.health <= 0 || player.mana < 0)
-            return results.push({win: false, mana: player.spent});
-
         // Clone each parameter to prevent unwanted mutations.
         player = _.clone(player);
         opponent = _.clone(opponent);
