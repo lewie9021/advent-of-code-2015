@@ -68,4 +68,5 @@ export function run() {
     const instructions = parse(input);
     
     console.log("What is the value in register b when the program in your puzzle input is finished executing?", _.get("b", execute(instructions)));
+    console.log("What is the value in register b after the program is finished executing if register a starts as 1 instead?", _.get("b", execute(instructions, {a: 1, b: 0})));
 }
