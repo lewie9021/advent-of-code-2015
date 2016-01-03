@@ -77,6 +77,7 @@ export function execute(instructions) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
+    const instructions = parse(input);
     
-    console.log("What is the value in register b when the program in your puzzle input is finished executing?");
+    console.log("What is the value in register b when the program in your puzzle input is finished executing?", _.get("b", execute(instructions)));
 }
