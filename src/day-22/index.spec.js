@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, simulate, getLeastManaAndWin } from "./";
+import { title, parse, getLeastManaAndWin } from "./";
 
 describe(title, function() {
 
@@ -38,41 +38,18 @@ describe(title, function() {
             
         });
 
-        describe("simulate", function() {
+        describe("getLeastManaAndWin", function() {
 
-            it("should return an array, given a list of spells, a player and an opponent", function() {
+            it("should return a number, given a list of spells, a player and an opponent", function() {
                 const spells = [];
                 const player = {};
                 const opponent = {};
-                const result = simulate(spells, player, opponent);
+                const result = getLeastManaAndWin(spells, player, opponent);
                 
-                expect(result).to.be.an("array");
-                expect(result).to.be.empty;
+                expect(result).to.be.a("number");
             });
 
-            it("should return an array of objects with the properties: 'win' and 'mana'", function() {
-                const spells = [{
-                    name: "Spell One",
-                    cost: 32,
-                    damage: 2,
-                    turns: 0
-                }];
-                const player = {
-                    health: 10,
-                    mana: 100
-                };
-                const opponent = {
-                    health: 6,
-                    damage: 1
-                };
-
-                simulate(spells, player, opponent).forEach((outcome) => {
-                    expect(outcome).to.be.an("object");
-                    expect(outcome).to.have.all.keys(["win", "mana"]);
-                });
-            });
-
-            it("should return an array with 1 outcome, given a simple damage spell", function() {
+            it("should return 96, given an example damage spell", function() {
                 const spells = [{
                     name: "Spell One",
                     cost: 32,
@@ -108,15 +85,12 @@ describe(title, function() {
                 // Player = {health: 8, mana: 4}
                 // Opponent = {health: 0}
 
-                const result = simulate(spells, player, opponent);
+                const result = getLeastManaAndWin(spells, player, opponent);
                 
-                expect(result).to.eql([{
-                    win: true,
-                    mana: 96
-                }]);
+                expect(result).to.eq(96);
             });
 
-            it("should return an array with 4 outcomes, given two damage spell", function() {
+            it("should return 92, given two example damage spells", function() {
                 const spells = [
                     {
                         name: "Spell One",
@@ -140,24 +114,23 @@ describe(title, function() {
                     damage: 1
                 };
 
-                // TODO: We don't care about order though .eql does.
-                expect(simulate(spells, player, opponent)).to.eql([
-                    // Use spell one x3. Opponent killed.
-                    {win: true, mana: 96}, // [1, 1, 1]
+                // Use spell one x3. Opponent killed.
+                // {win: true, mana: 96}, // [1, 1, 1]
 
-                    // Combination of both spells. Out of mana.
-                    {win: false, mana: 124}, // [2, 1, 1]
-                    
-                    // Combination of both spells. Opponent killed.
-                    {win: true, mana: 92}, // [1, 2]
-                    {win: true, mana: 92}, // [2, 1]
-                    
-                    // Use spell two x2. Out of mana.
-                    {win: false, mana: 120} // [2, 2]
-                ]);
+                // Combination of both spells. Out of mana.
+                // {win: false, mana: 124}, // [2, 1, 1]
+                
+                // Combination of both spells. Opponent killed.
+                // {win: true, mana: 92}, // [1, 2]
+                // {win: true, mana: 92}, // [2, 1]
+                
+                // Use spell two x2. Out of mana.
+                // {win: false, mana: 120} // [2, 2]
+
+                expect(getLeastManaAndWin(spells, player, opponent)).to.eq(92);
             });
 
-            it("should return an array of 7 outcomes, given damage and heal spells", function() {
+            it("should return 96, given example damage and heal spells", function() {
                 const spells = [
                     {
                         name: "Spell One",
@@ -180,26 +153,24 @@ describe(title, function() {
                     health: 6,
                     damage: 1
                 };
+
+                // Use spell one x3. Opponent killed.
+                // {win: true, mana: 96}, // [1, 1, 1]
                 
-                // TODO: We don't care about order though .eql does.
-                expect(simulate(spells, player, opponent)).to.eql([
-                    // Use spell one x3. Opponent killed.
-                    {win: true, mana: 96}, // [1, 1, 1]
-                    
-                    // Combination of both spells. Out of mana.
-                    {win: false, mana: 129}, // [1, 1, 2]
-                    {win: false, mana: 129}, // [1, 2, 1]
-                    {win: false, mana: 162}, // [1, 2, 2]
-                    {win: false, mana: 129}, // [2, 1, 1]
-                    {win: false, mana: 162}, // [2, 1, 2]
-                    
-                    // Use spell two x2. Out of mana.
-                    {win: false, mana: 130} // [2, 2]
-                ]);
+                // Combination of both spells. Out of mana.
+                // {win: false, mana: 129}, // [1, 1, 2]
+                // {win: false, mana: 129}, // [1, 2, 1]
+                // {win: false, mana: 162}, // [1, 2, 2]
+                // {win: false, mana: 129}, // [2, 1, 1]
+                // {win: false, mana: 162}, // [2, 1, 2]
                 
+                // Use spell two x2. Out of mana.
+                // {win: false, mana: 130} // [2, 2]
+                
+                expect(getLeastManaAndWin(spells, player, opponent)).to.eq(96);
             });
 
-            it("should return an array of 7 outcomes, given damage and armor spells", function() {
+            it("should return 96, given example damage and armor spells", function() {
                 const spells = [
                     {
                         name: "Spell One",
@@ -223,22 +194,20 @@ describe(title, function() {
                     damage: 4
                 };
 
-                // TODO: We don't care about order though .eql does.
-                expect(simulate(spells, player, opponent)).to.eql([
-                    // Use spell one x3. Opponent killed.
-                    {win: true, mana: 96}, // [1, 1, 1]
-                    
-                    // Combination of both spells. Player killed.
-                    {win: false, mana: 94}, // [1, 1, 2]
-                    
-                    // Combination of both spells. Out of mana.
-                    {win: false, mana: 126}, // [1, 2, 1, 1]
-                    {win: false, mana: 124}, // [1, 2, 1, 2]
-                    {win: false, mana: 126}, // [2, 1, 1, 1]
-                    {win: false, mana: 124}, // [2, 1, 1, 2]
-                    {win: false, mana: 124}, // [2, 1, 2, 1]
-                ]);
+                // Use spell one x3. Opponent killed.
+                // {win: true, mana: 96}, // [1, 1, 1]
                 
+                // Combination of both spells. Player killed.
+                // {win: false, mana: 94}, // [1, 1, 2]
+                
+                // Combination of both spells. Out of mana.
+                // {win: false, mana: 126}, // [1, 2, 1, 1]
+                // {win: false, mana: 124}, // [1, 2, 1, 2]
+                // {win: false, mana: 126}, // [2, 1, 1, 1]
+                // {win: false, mana: 124}, // [2, 1, 1, 2]
+                // {win: false, mana: 124}, // [2, 1, 2, 1]
+                
+                expect(getLeastManaAndWin(spells, player, opponent)).to.eq(96);
             });
 
             it("should return an array of 8 outcomes, given damage and mana spells", function() {
@@ -264,50 +233,23 @@ describe(title, function() {
                     health: 6,
                     damage: 4
                 };
+
+                // Use spell one x3. Opponent killed.
+                // {win: true, mana: 96}, // [1, 1, 1]
                 
-                // TODO: We don't care about order though .eql does.
-                // Do not include mana recharge effects as "spending" negative mana.
-                expect(simulate(spells, player, opponent)).to.eql([
-                    // Use spell one x3. Opponent killed.
-                    {win: true, mana: 96}, // [1, 1, 1]
-                    
-                    // Combination of both spells. Player killed.
-                    {win: false, mana: 94}, // [1, 1, 2]
-                    {win: false, mana: 94}, // [1, 2, 1]
-                    {win: false, mana: 92}, // [1, 2, 2]
-                    {win: false, mana: 94}, // [2, 1, 1]
-                    {win: false, mana: 92}, // [2, 2, 1]
-                    {win: false, mana: 92}, // [2, 1, 2]
+                // Combination of both spells. Player killed.
+                // {win: false, mana: 94}, // [1, 1, 2]
+                // {win: false, mana: 94}, // [1, 2, 1]
+                // {win: false, mana: 92}, // [1, 2, 2]
+                // {win: false, mana: 94}, // [2, 1, 1]
+                // {win: false, mana: 92}, // [2, 2, 1]
+                // {win: false, mana: 92}, // [2, 1, 2]
 
-                    // Use spell two x3. Player killed.
-                    {win: false, mana: 90}, // [2, 2, 2]
-                ]);
+                // Use spell two x3. Player killed.
+                // {win: false, mana: 90}, // [2, 2, 2]
                 
-            });
-            
-        });
-
-        describe("getLeastManaAndWin", function() {
-
-            it("should return 30, given {win, 30}, {lose, 10}, {win: 40}", function() {
-                const outcomes = [
-                    {win: true, mana: 30},
-                    {win: false, mana: 10},
-                    {win: true, mana: 47}
-                ];
-
-                expect(getLeastManaAndWin(outcomes)).to.eq(30);
-            });
-
-            it("should return 54, given {win, 95}, {lose, 44}, {lose 54}, {win: 54}", function() {
-                const outcomes = [
-                    {win: true, mana: 95},
-                    {win: false, mana: 44},
-                    {win: false, mana: 54},
-                    {win: true, mana: 54}
-                ];
-
-                expect(getLeastManaAndWin(outcomes)).to.eq(54);
+                // Note: do not include mana recharge effects as "spending" negative mana.
+                expect(getLeastManaAndWin(spells, player, opponent)).to.eq(96);
             });
             
         });
