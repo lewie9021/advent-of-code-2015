@@ -256,4 +256,48 @@ describe(title, function() {
 
     });
 
+    describe("Part 2:", function() {
+
+        describe("getLeastManaAndWin", function() {
+
+            it("should return 126, given example damage and armor spells on 'hard' difficulty", function() {
+                const spells = [
+                    {
+                        name: "Spell One",
+                        cost: 32,
+                        damage: 2,
+                        turns: 0
+                    },
+                    {
+                        name: "Spell Two",
+                        cost: 30,
+                        armor: 3,
+                        turns: 6
+                    }
+                ];
+                const player = {
+                    health: 10,
+                    mana: 130
+                };
+                const opponent = {
+                    health: 6,
+                    damage: 4
+                };
+
+                // Use spell one x2. Player killed.
+                // {win: false, mana: 64}, // [1, 1]
+
+                // Combination of both spells. Player killed
+                // {win: false, mana: 94}, // [1, 2, 1]
+
+                // Combination of both spells. Opponent killed
+                // {win: true, mana: 126}, // [2, 1, 1, 1]
+                
+                expect(getLeastManaAndWin(spells, player, opponent, "hard")).to.eq(126);
+            });
+            
+        });
+
+    });
+
 });

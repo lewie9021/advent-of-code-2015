@@ -45,7 +45,7 @@ function applyEffects(effects, spells, player, opponent) {
 const castSpell = _.curry((player, opponent, effects, spell) => {
     const {mana, spent, armor, health} = player;
     const {id, cost, turns} = spell;
-
+    
     return {
         player: {
             mana: mana - cost,
@@ -61,7 +61,7 @@ const castSpell = _.curry((player, opponent, effects, spell) => {
     };
 });
 
-export function getLeastManaAndWin(spells, player, opponent) {
+export function getLeastManaAndWin(spells, player, opponent, difficulty = "normal") {
     // Assign an index to each spell.
     spells = _.map((id) => {
         return assign({id}, spells[id], {});
@@ -80,14 +80,18 @@ export function getLeastManaAndWin(spells, player, opponent) {
         player = _.clone(player);
         opponent = _.clone(opponent);
 
+        // Difficulty is hard and it's the player's turn.
+        if (difficulty == "hard" && turn % 2 == 0)
+            player.health -= 1;
+        
+        // Check if we have died.
+        if (player.health <= 0)
+            return score;
+
         // Apply effects, deducting timer values.
         effects = applyEffects(effects, spells, player, opponent);
-
-        // We die, or run out of mana.
-        if (player.health <= 0 || player.mana < 0)
-            return score;
             
-        // We killed the opponent.
+        // Check if we we killed the opponent.
         if (opponent.health <= 0)
             return score = player.spent;
 
@@ -101,22 +105,33 @@ export function getLeastManaAndWin(spells, player, opponent) {
         
         // Our turn, select a spell.
         return _.compose(
-            _.min,
-            _.map(({player, opponent, effects}) => {
+            _.forEach(({player, opponent, effects}) => {
                 // Progress the game with the casted spell.
-                return simulate(player, opponent, effects, turn + 1);
+                simulate(player, opponent, effects, turn + 1);
             }),
             // Each spell we cast, we want to return the new state of
             // the player, opponent, and effects.
             _.map(castSpell(player, opponent, effects)),
-            // Can't select a spell that's already in effect.
-            _.filter(({id}) => !effects[id])
+            // Filter out spells we can't cast.
+            _.filter(({id, cost}) => {
+                // Can't select a spell that's already in effect.
+                if (effects[id] > 0)
+                    return false;
+
+                // Can't select a spell that we don't have enough mana for.
+                if (cost > player.mana)
+                    return false;
+
+                return true;
+            })
         )(spells);
     };
 
-    return simulate(player, opponent, _.reduce((effects, index) => {
+    simulate(player, opponent, _.reduce((effects, index) => {
         return assign({[index]: 0}, effects, {});
     }, {}, _.range(0, spells.length)));
+
+    return score;
 }
 
 export function run() {
@@ -131,4 +146,5 @@ export function run() {
     };
     
     console.log("What is the least amount of mana you can spend and still win the fight?", getLeastManaAndWin(spells, player, opponent));
+    console.log("With the difficulty set to 'hard', what is the least amount of mana you can spend and still win the fight?", getLeastManaAndWin(spells, player, opponent, "hard"));
 }
