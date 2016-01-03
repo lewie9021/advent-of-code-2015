@@ -15,48 +15,36 @@ export const parse = _.compose(
 );
 
 const commands = {
-    "inc": (registers, position, id) => {
-        return {
-            nextRegisters: assign({
-                [id]: registers[id] + 1
-            }, registers, {}),
-            nextPosition: position + 1
-        };
-    },
-    "hlf": (registers, position, id) => {
-        return {
-            nextRegisters: assign({
-                [id]: Math.floor(registers[id] / 2)
-            }, registers, {}),
-            nextPosition: position + 1
-        };
-    },
-    "tpl": (registers, position, id) => {
-        return {
-            nextRegisters: assign({
-                [id]: registers[id] * 3
-            }, registers, {}),
-            nextPosition: position + 1
-        };
-    },
-    "jmp": (registers, position, value) => {
-        return {
-            nextRegisters: registers,
-            nextPosition: position + parseInt(value, 10)
-        };
-    },
-    "jie": (registers, position, id, value) => {
-        return {
-            nextRegisters: registers,
-            nextPosition: position + (registers[id] % 2 ? 1 : parseInt(value, 10))
-        };
-    },
-    "jio": (registers, position, id, value) => {
-        return {
-            nextRegisters: registers,
-            nextPosition: position + (registers[id] != 1 ? 1 : parseInt(value, 10))
-        };
-    }
+    "inc": (registers, position, id) => ({
+        nextRegisters: assign({
+            [id]: registers[id] + 1
+        }, registers, {}),
+        nextPosition: position + 1
+    }),
+    "hlf": (registers, position, id) => ({
+        nextRegisters: assign({
+            [id]: Math.floor(registers[id] / 2)
+        }, registers, {}),
+        nextPosition: position + 1
+    }),
+    "tpl": (registers, position, id) => ({
+        nextRegisters: assign({
+            [id]: registers[id] * 3
+        }, registers, {}),
+        nextPosition: position + 1
+    }),
+    "jmp": (registers, position, value) => ({
+        nextRegisters: registers,
+        nextPosition: position + parseInt(value, 10)
+    }),
+    "jie": (registers, position, id, value) => ({
+        nextRegisters: registers,
+        nextPosition: position + (registers[id] % 2 ? 1 : parseInt(value, 10))
+    }),
+    "jio": (registers, position, id, value) => ({
+        nextRegisters: registers,
+        nextPosition: position + (registers[id] != 1 ? 1 : parseInt(value, 10))
+    })
 };
 
 export function execute(instructions, initialRegisters = {a: 0, b: 0}) {
