@@ -107,7 +107,7 @@ describe(title, function() {
             it("should support the jmp (jump) operator", function() {
                 const input = [
                     "inc a",
-                    "jmp 3",
+                    "jmp +3",
                     "inc a",
                     "inc b",
                     "inc a"
@@ -139,13 +139,12 @@ describe(title, function() {
                     "inc a",
                     "jio a, -2",
                     "inc b",
-                    "inc a",
-                    "jio a, -2"
+                    "inc a"
                 ].join("\n");
                 const instructions = parse(input);
                 const results = execute(instructions);
 
-                expect(results).to.eql({a: 4, b: 4});
+                expect(results).to.eql({a: 3, b: 3});
             });
             
             it("should return {a: 2, b: 0}, given the example instruction set", function() {
