@@ -164,4 +164,38 @@ describe(title, function() {
         
     });
 
+    describe("Part 2:", function() {
+
+        describe("execute", function() {
+
+            it("should return {a: 34, b: 5}, given the example and a second parameter: {a: 10, b: 5}", function() {
+                const input = [
+                    "inc a",
+                    "jio a, +2",
+                    "tpl a",
+                    "inc a"
+                ].join("\n");
+                const instructions = parse(input);
+                const results = execute(instructions, {a: 10, b: 5});
+
+                expect(results).to.eql({a: 34, b: 5});
+            });
+
+            it("should return {a: 13, b: 6}, given the example and a second parameter: {a: 3, b: 6}", function() {
+                const input = [
+                    "inc a",
+                    "jio a, +2",
+                    "tpl a",
+                    "inc a"
+                ].join("\n");
+                const instructions = parse(input);
+                const results = execute(instructions, {a: 3, b: 6});
+
+                expect(results).to.eql({a: 13, b: 6});
+            });
+            
+        });
+        
+    });
+
 });

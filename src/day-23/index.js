@@ -17,61 +17,61 @@ export const parse = _.compose(
 const commands = {
     "inc": (registers, position, id) => {
         return {
-            registers: assign({
+            nextRegisters: assign({
                 [id]: registers[id] + 1
             }, registers, {}),
-            position: position + 1
+            nextPosition: position + 1
         };
     },
     "hlf": (registers, position, id) => {
         return {
-            registers: assign({
+            nextRegisters: assign({
                 [id]: Math.floor(registers[id] / 2)
             }, registers, {}),
-            position: position + 1
+            nextPosition: position + 1
         };
     },
     "tpl": (registers, position, id) => {
         return {
-            registers: assign({
+            nextRegisters: assign({
                 [id]: registers[id] * 3
             }, registers, {}),
-            position: position + 1
+            nextPosition: position + 1
         };
     },
     "jmp": (registers, position, value) => {
         return {
-            registers,
-            position: position + parseInt(value, 10)
+            nextRegisters: registers,
+            nextPosition: position + parseInt(value, 10)
         };
     },
     "jie": (registers, position, id, value) => {
         return {
-            registers,
-            position: position + (registers[id] % 2 ? 1 : parseInt(value, 10))
+            nextRegisters: registers,
+            nextPosition: position + (registers[id] % 2 ? 1 : parseInt(value, 10))
         };
     },
     "jio": (registers, position, id, value) => {
         return {
-            registers,
-            position: position + (registers[id] != 1 ? 1 : parseInt(value, 10))
+            nextRegisters: registers,
+            nextPosition: position + (registers[id] != 1 ? 1 : parseInt(value, 10))
         };
     }
 };
 
-export function execute(instructions) {
-    const run = ({operator, operands}, currentRegisters, currentPosition = 0) => {
+export function execute(instructions, initialRegisters = {a: 0, b: 0}) {
+    const run = ({operator, operands}, registers, position = 0) => {
         const command = commands[operator];
-        const {position, registers} = command(currentRegisters, currentPosition, ...operands);
-        const instruction = instructions[position];
+        const {nextPosition, nextRegisters} = command(registers, position, ...operands);
+        const instruction = instructions[nextPosition];
 
         if (!instruction)
-            return registers;
+            return nextRegisters;
 
-        return run(instruction, registers, position);
+        return run(instruction, nextRegisters, nextPosition);
     };
-    
-    return run(_.first(instructions), {a: 0, b: 0});
+
+    return run(_.first(instructions), initialRegisters);
 };
 
 export function run() {
