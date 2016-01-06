@@ -50,7 +50,24 @@ describe(title, function() {
                 }, result);
             });
 
-            
+            it("should only return configurations that contain groups of matching sum", function() {
+                const result = getConfigurations([1, 2, 3, 4, 5, 6]);
+                const expected = [
+                    [[1, 4], [2, 3], [5]],
+                    [[1, 4], [3, 2], [5]],
+                    [[4, 1], [2, 3], [5]],
+                    [[4, 1], [3, 2], [5]]
+                ];
+
+                expect(result.length).to.eq(4);
+                
+                _.forEach((expected) => {
+                    const match = _.filter((res) => _.isEqual(res, expected), result);
+
+                    expect(match.length).to.eq(1);
+                }, result);
+            });
+
             
         });
 
