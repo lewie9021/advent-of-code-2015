@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, getConfigurations } from "./";
+import { title, parse, getUniquePermutations, getConfigurations } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
@@ -24,6 +24,40 @@ describe(title, function() {
                 expect(result).to.eql([1, 2, 3, 4]);
             });
             
+        });
+
+        describe("getUniquePermutations", function() {
+            
+            it("should return an array of permutations", function() {
+                const result = getUniquePermutations([1, 2, 3, 4, 5], 3);
+
+                expect(result).to.be.an("array");
+            });
+
+            it("should return x permutations given [1, 2, 3, 4, 5]", function() {
+                const numbers = [1, 2, 3, 4, 5];
+                const result = getUniquePermutations(numbers, 3);
+                const permutations = [
+                    [1, 2, 3],
+                    [1, 2, 4],
+                    [1, 2, 5],
+                    [1, 3, 4],
+                    [1, 3, 5],
+                    [1, 4, 5],
+                    [2, 3, 4],
+                    [2, 3, 5],
+                    [3, 4, 5]
+                ];
+
+                expect(result.length).to.eq(permutations.length);
+
+                _.forEach((permutation) => {
+                    const match = _.filter((res) => _.isEqual(res, permutation), result);
+
+                    expect(match.length).to.eq(1);
+                }, permutations);
+            });
+
         });
         
         describe("getConfigurations", function() {
