@@ -15,6 +15,16 @@ export const reverse = (x) => x.reverse();
 
 export const warpValue = (x, max) => ((x % max) + max) % max;
 
+export const remove = (arr, i) => arr.slice(0, i).concat(arr.slice(i + 1));
+
+// A less annoying _.assign function.
+export const assign = (...args) => {
+    const object = _.last(args);
+    const sources = reverse(_.initial(args));
+
+    return __.assign(object, ...sources);
+};
+
 export function log(x) {
     console.log(x);
 
@@ -24,7 +34,7 @@ export function log(x) {
 export const groupBy = _.curryRight(__.groupBy, 2);
 
 // A less annoying _.fill function.
-export const fill = (x, collection) => _.map(_.constant(x), collection);
+export const fill = _.curry((x, collection) => _.map(_.constant(x), collection));
 
 export const doWhile = _.curry((f, g, x) => {
     let y = f(x);
