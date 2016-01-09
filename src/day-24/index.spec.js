@@ -25,51 +25,17 @@ describe(title, function() {
             });
             
         });
-
-        describe("getUniquePermutations", function() {
-            
-            it("should return an array of permutations", function() {
-                const result = getUniquePermutations([1, 2, 3, 4, 5], 3);
-
-                expect(result).to.be.an("array");
-            });
-
-            it("should return x permutations given [1, 2, 3, 4, 5]", function() {
-                const numbers = [1, 2, 3, 4, 5];
-                const result = getUniquePermutations(numbers, 3);
-                const permutations = [
-                    [1, 2, 3],
-                    [1, 2, 4],
-                    [1, 2, 5],
-                    [1, 3, 4],
-                    [1, 3, 5],
-                    [1, 4, 5],
-                    [2, 3, 4],
-                    [2, 3, 5],
-                    [3, 4, 5]
-                ];
-
-                expect(result.length).to.eq(permutations.length);
-
-                _.forEach((permutation) => {
-                    const match = _.filter((res) => _.isEqual(res, permutation), result);
-
-                    expect(match.length).to.eq(1);
-                }, permutations);
-            });
-
-        });
         
         describe("getConfigurations", function() {
 
             it("should return an array of configurations", function() {
-                const result = getConfigurations([1, 2, 3, 4, 5, 6]);
+                const result = getConfigurations([1, 2, 3, 4, 5]);
 
                 expect(result).to.be.an("array");
             });
 
             it("should configuration arrays containing 3 groups", function() {
-                const result = getConfigurations([1, 2, 3, 4, 5, 6]);
+                const result = getConfigurations([1, 2, 3, 4, 5]);
 
                 expect(result).to.be.an("array");
                 
@@ -85,23 +51,22 @@ describe(title, function() {
             });
 
             it("should only return configurations that contain groups of matching sum", function() {
-                const result = getConfigurations([1, 2, 3, 4, 5, 6]);
-                const expected = [
-                    [[1, 4], [2, 3], [5]],
-                    [[1, 4], [3, 2], [5]],
-                    [[4, 1], [2, 3], [5]],
-                    [[4, 1], [3, 2], [5]]
-                ];
+                const result = getConfigurations([1, 2, 3, 4, 5]);
 
-                expect(result.length).to.eq(4);
-                
-                _.forEach((expected) => {
-                    const match = _.filter((res) => _.isEqual(res, expected), result);
-
-                    expect(match.length).to.eq(1);
-                }, result);
+                expect(result.length).to.eq(1);
+                expect(result).to.eql([
+                    [[1, 4], [2, 3], [5]]
+                ]);
             });
 
+            it("should only return configurations that use every weight", function() {
+                const result = getConfigurations([1, 2, 3, 4, 5, 8]);
+
+                expect(result.length).to.eq(1);
+                expect(result).to.eql([
+                    [[1, 2, 5], [1, 3, 4], [8]]
+                ]);
+            });
             
         });
 
