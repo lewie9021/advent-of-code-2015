@@ -11,7 +11,7 @@ export const parse = _.compose(
     split("\n")
 );
 
-function getPermutations(values, size, partial = [], result = []) {
+export function getPermutations(values, size, partial = [], result = []) {
     if (partial.length >= size)
 	return result.push(partial);
     
@@ -22,44 +22,23 @@ function getPermutations(values, size, partial = [], result = []) {
     return result;
 }
 
-function uniquePermutations(configuration) {
-    const permutations = getPermutations(_.range(0, configuration.length), 3);
+export function uniquePermutations(permutations) {
+    return _.reduce((result, permutation) => {
+        const sorted = _.sortBy(_.identity, permutation);
+        const identical = _.compose(_.isEqual(sorted), _.sortBy(_.identity));
+        
+        // Check if we already have the permutation.
+        // For exampple, we class [1, 2, 3] and [3, 1, 2] as identical.
+        if (!_.some(identical, result))
+            result.push(sorted);
 
-    return _.compose(
-        _.reduce((result, permutation) => {
-            // Check if we already have the permutation.
-            // For exampple, we class [1, 2, 3] and [3, 1, 2] as identical.
-            if (!_.some((x) => !_.difference(x, permutation).length, result))
-                result.push(permutation);
-
-            return result;
-        }, []),
-        _.filter((x) => _.unique(x).length == 3)
-    )(permutations);
+        return result;
+    }, [], permutations);
 };
 
-export function getConfigurations(weights) {
-    const uniqueWeights = _.compose(_.unique, _.flatten);
-    
-    return _.compose(
-        // Filter out groups that don't use all the weights or contain duplicates.
-        _.filter((group) => {
-            return uniqueWeights(group).length == weights.length;
-        }),
-        // Remove the addition level of nesting caused by the triple map.
-        _.flatten,
-        // We want groups of 3 combintations with the same sum.
-        _.map((configuration) => {
-            return _.map((permutation) => {
-                return _.map((index) => configuration[index], permutation);
-            }, uniquePermutations(configuration));
-        }),
-        // Check there are at least 3 groups.
-        _.filter((x) => x.length >= 3),
-        // Get a list of weight combinations that equal the value of each 'weight'.
-        _.map((weight) => getCombinations(weights, weight))
-    )(weights);
-};
+export function getConfigurations() {
+
+}
 
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
