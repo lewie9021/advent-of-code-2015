@@ -23,18 +23,20 @@ export function getPermutations(values, size, partial = [], result = []) {
 }
 
 export function unique(permutations, sort) {
+    let store = {};
+
     return _.reduce((result, permutation) => {
         const sorted = _.sortBy(_.identity, permutation);
-        const identical = _.compose(_.isEqual(sorted), _.sortBy(_.identity));
-        
-        // Check if we already have the permutation.
-        // For exampple, we class [1, 2, 3] and [3, 1, 2] as identical.
-        if (!_.some(identical, result))
-            result.push(sort ? sorted : permutation);
+
+        if (store[sorted])
+            return result;
+
+        store[sorted] = true;
+        result.push(sort ? sorted : permutation);
 
         return result;
     }, [], permutations);
-};
+}
 
 export function getGroup(blueprint, partial) {
     if (!partial.length)
