@@ -59,33 +59,38 @@ export function getGroup(blueprint, partial) {
     }
 }
 
-export function getConfigurations(blueprint, values, partial = [], result = []) {
-    const firstLength = _.first(blueprint);
-    const target =  (partial.length >= firstLength) ? _.sum(partial.slice(0, firstLength)) : null;
-    const group = getGroup(blueprint, partial);
-    const total = _.sum(group.values);
-
-    // The target is determined by the sum of the first group.
-    // It's null if we are yet to complete the first group.
-    if (target) {
-        // The group has exceeded the limit. 
-        if (total > target)
-            return;
-
-        // We completed the group, but failed to hit the target.
-        if (group.values.length == group.length && total != target)
-            return;
-    }
-
-    if (!values.length)
-        result.push(partial);
+export function getConfigurations(blueprint, values) {
+    const first = _.first(blueprint);
     
-    // Pick each value from values.
-    for (let i = 0; i < values.length; i += 1) {
-        getConfigurations(blueprint, remove(values, i), partial.concat(values[i]), result);
-    }
+    const findConfigurations = (values, partial = [], result = []) => {
+        const target =  (partial.length >= first) ? _.sum(partial.slice(0, first)) : null;
+        const group = getGroup(blueprint, partial);
+        const total = _.sum(group.values);
+
+        // The target is determined by the sum of the first group.
+        // It's null if we are yet to complete the first group.
+        if (target) {
+            // The group has exceeded the limit. 
+            if (total > target)
+                return;
+
+            // We completed the group, but failed to hit the target.
+            if (group.values.length == group.length && total != target)
+                return;
+        }
+
+        if (!values.length)
+            result.push(partial);
+        
+        // Pick each value from values.
+        _.forEach((index) => {
+            findConfigurations(remove(values, index), partial.concat(values[index]), result);
+        }, _.range(0, values.length));
+
+        return result;
+    };
     
-    return unique(result);
+    return unique(findConfigurations(values));
 }
 
 export function run() {
