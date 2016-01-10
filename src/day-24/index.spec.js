@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, getPermutations, unique, getGroup, getConfigurations } from "./";
+import { title, parse, getPermutations, unique, getGroup, chunkBy, getConfigurations } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
@@ -255,6 +255,28 @@ describe(title, function() {
             });
 
         });
+
+        describe("chunkBy", function() {
+
+            it("should return [[1], [2], [3]], given [1, 1, 1] and [1, 2, 3]", function() {
+                const result = chunkBy([1, 1, 1], [1, 2, 3]);
+
+                expect(result).to.eql([[1], [2], [3]]);
+            });
+
+            it("should return [[5], [4, 1], [2, 3]], given [1, 2, 2] and [5, 4, 1, 2, 3]", function() {
+                const result = chunkBy([1, 2, 2], [5, 4, 1, 2, 3]);
+
+                expect(result).to.eql([[5], [4, 1], [2, 3]]);
+            });
+
+            it("should return [[1, 2, 3], [4, 5]], given [3, 2] and [1, 2, 3, 4, 5]", function() {
+                const result = chunkBy([3, 2], [1, 2, 3, 4, 5]);
+
+                expect(result).to.eql([[1, 2, 3], [4, 5]]);
+            });
+            
+        });
         
         describe("getConfigurations", function() {
 
@@ -262,20 +284,10 @@ describe(title, function() {
                 const values = [1, 2, 3, 4, 5];
                 const blueprint = [1, 2, 2];
                 const result = getConfigurations(blueprint, values);
-                const expected = [
-                    [[1, 4], [2, 3], [5]],
-                    [[1, 4], [3, 2], [5]],
-                    [[4, 1], [2, 3], [5]],
-                    [[4, 1], [3, 2], [5]]
-                ];
 
-                expect(result.length).to.eq(4);
-
-                _.forEach((expected) => {
-                    const match = _.filter(_.isEqual(expected), result);
-
-                    expect(match.length).to.eq(1);
-                }, result);
+                expect(result).to.eql([
+                    [[5], [1, 4], [2, 3]]
+                ]);
             });
             
         });

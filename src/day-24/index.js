@@ -59,9 +59,18 @@ export function getGroup(blueprint, partial) {
     }
 }
 
+export const chunkBy = _.curry((blueprint, values, result = []) => {
+    if (!blueprint.length)
+        return result;
+    
+    const length = _.first(blueprint);
+    const group = values.slice(0, length);
+    
+    return chunkBy(blueprint.slice(1), values.slice(length), result.concat([group]));
+}, 2);
+
 export function getConfigurations(blueprint, values) {
     const first = _.first(blueprint);
-    
     const findConfigurations = (values, partial = [], result = []) => {
         const target =  (partial.length >= first) ? _.sum(partial.slice(0, first)) : null;
         const group = getGroup(blueprint, partial);
@@ -89,8 +98,12 @@ export function getConfigurations(blueprint, values) {
 
         return result;
     };
-    
-    return unique(findConfigurations(values));
+
+    return _.compose(
+        _.map(chunkBy(blueprint)),
+        unique,
+        findConfigurations
+    )(values);
 }
 
 export function run() {
