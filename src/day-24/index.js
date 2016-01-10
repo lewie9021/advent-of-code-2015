@@ -38,27 +38,15 @@ export function unique(permutations, sort) {
     }, [], permutations);
 }
 
-export function getGroup(blueprint, partial) {
-    if (!partial.length)
-        return {
-            values: [],
-            length: 0
-        };
-    
+export function getRanges(blueprint) {
     let sum = 0;
-    
-    for (let i = 0; i < blueprint.length; i += 1) {
-        const length = blueprint[i];
-        
-        if (sum + length < partial.length) {
-            sum += length;
-        } else {
-            return {
-                values: partial.slice(sum, sum + Math.min(length, partial.length)),
-                length
-            };
-        }
-    }
+
+    return _.reduce((result, length) => {
+        result.push([sum, sum + length]);
+        sum += length;
+
+        return result;
+    }, [], blueprint);
 }
 
 export const chunkBy = _.curry((blueprint, values, result = []) => {
@@ -71,23 +59,43 @@ export const chunkBy = _.curry((blueprint, values, result = []) => {
     return chunkBy(blueprint.slice(1), values.slice(length), result.concat([group]));
 }, 2);
 
+function inRange(a, b, x) {
+    return  (x >= a && x <= b);
+}
+
 export function getConfigurations(blueprint, values) {
     const first = _.first(blueprint);
-    const findConfigurations = (values, partial = [], result = []) => {
-        const target =  (partial.length >= first) ? _.sum(partial.slice(0, first)) : null;
-        const group = getGroup(blueprint, partial);
-        const total = _.sum(group.values);
+    const ranges = getRanges(blueprint);
+    const getIndex = (length) => {
+        return _.find((index) => {
+            return inRange(...ranges[index], length);
+        }, _.range(0, ranges.length));
+    };
 
+    const findConfigurations = (values, target = null, partial = [], result = []) => {
+        if (!target && partial.length >= first)
+            target = _.sum(partial.slice(0, first));
+
+        const index = getIndex(partial.length);
+
+        // Last group and the values left can't possibly equal the target.
+        if (values.length == _.last(blueprint) && _.sum(values) != target)
+            return result;
+
+        const range = ranges[index];
+        const group = partial.slice(...range);
+        const total = _.sum(group);
+        
         // The target is determined by the sum of the first group.
         // It's null if we are yet to complete the first group.
         if (target) {
             // The group has exceeded the limit. 
             if (total > target)
-                return;
+                return result;
 
             // We completed the group, but failed to hit the target.
-            if (group.values.length == group.length && total != target)
-                return;
+            if (group.length == blueprint[index] && total != target)
+                return result;
         }
 
         if (!values.length)
@@ -95,7 +103,7 @@ export function getConfigurations(blueprint, values) {
         
         // Pick each value from values.
         _.forEach((index) => {
-            findConfigurations(remove(values, index), partial.concat(values[index]), result);
+            findConfigurations(remove(values, index), target, partial.concat(values[index]), result);
         }, _.range(0, values.length));
 
         return result;

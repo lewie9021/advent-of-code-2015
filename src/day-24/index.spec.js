@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, getPermutations, unique, getGroup, chunkBy, getConfigurations } from "./";
+import { title, parse, getPermutations, unique, getRanges, chunkBy, getConfigurations } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
@@ -222,39 +222,26 @@ describe(title, function() {
             
         });
 
-        describe("getGroup", function() {
+        describe("getRanges", function() {
+            
+            it("should return [[0, 1], [1, 3], [3, 6]], given [1, 2, 3]", function() {
+                const result = getRanges([1, 2, 3]);
 
-            it("should return {values: [], length: 0}, given [1, 2, 2], and []", function() {
-                const result = getGroup([1, 2, 2], []);
-
-                expect(result).to.eql({values: [], length: 0});
+                expect(result).to.eql([
+                    [0, 1], [1, 3], [3, 6]
+                ]);
             });
 
-            it("should return {values: [5], length: 1}, given [1, 2, 2], and [5]", function() {
-                const result = getGroup([1, 2, 2], [5]);
+            it("should return [[0, 2], [2, 5], [5, 9]], given [2, 3, 4]", function() {
+                const result = getRanges([2, 3, 4]);
 
-                expect(result).to.eql({values: [5], length: 1});
+                expect(result).to.eql([
+                    [0, 2], [2, 5], [5, 9]
+                ]);
             });
             
-            it("should return {values: [4], length: 2}, given [1, 2, 2] and [5, 4]", function() {
-                const result = getGroup([1, 2, 2], [5, 4]);
-
-                expect(result).to.eql({values: [4], length: 2});
-            });
-            
-            it("should return {values: [4, 3], length: 2}, given [1, 2, 2] and [5, 4, 3]", function() {
-                const result = getGroup([1, 2, 2], [5, 4, 3]);
-
-                expect(result).to.eql({values: [4, 3], length: 2});
-            });
-
-            it("should return {values: [2], length: 2}, given [1, 2, 2] and [5, 4, 3, 2]", function() {
-                const result = getGroup([1, 2, 2], [5, 4, 3, 2]);
-
-                expect(result).to.eql({values: [2], length: 2});
-            });
-
         });
+        
 
         describe("chunkBy", function() {
 
@@ -280,7 +267,7 @@ describe(title, function() {
         
         describe("getConfigurations", function() {
 
-            it("should return 4 configurations, given [2, 2, 1] and [1, 2, 3, 4, 5]", function() {
+            it("should return 4 configurations, given [1, 2, 2] and [1, 2, 3, 4, 5]", function() {
                 const values = [1, 2, 3, 4, 5];
                 const blueprint = [1, 2, 2];
                 const result = getConfigurations(blueprint, values);
