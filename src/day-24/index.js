@@ -1,7 +1,7 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
-import { split } from "../helpers";
+import { split, remove } from "../helpers";
 import { getCombinations } from "../day-17";
 
 export const title = "Day 24: It Hangs in the Balance";
@@ -22,7 +22,7 @@ export function getPermutations(values, size, partial = [], result = []) {
     return result;
 }
 
-export function uniquePermutations(permutations) {
+export function unique(permutations, sort) {
     return _.reduce((result, permutation) => {
         const sorted = _.sortBy(_.identity, permutation);
         const identical = _.compose(_.isEqual(sorted), _.sortBy(_.identity));
@@ -30,14 +30,62 @@ export function uniquePermutations(permutations) {
         // Check if we already have the permutation.
         // For exampple, we class [1, 2, 3] and [3, 1, 2] as identical.
         if (!_.some(identical, result))
-            result.push(sorted);
+            result.push(sort ? sorted : permutation);
 
         return result;
     }, [], permutations);
 };
 
-export function getConfigurations() {
+export function getGroup(blueprint, partial) {
+    if (!partial.length)
+        return {
+            values: [],
+            length: 0
+        };
+    
+    let sum = 0;
+    
+    for (let i = 0; i < blueprint.length; i += 1) {
+        const length = blueprint[i];
+        
+        if (sum + length < partial.length) {
+            sum += length;
+        } else {
+            return {
+                values: partial.slice(sum, sum + Math.min(length, partial.length)),
+                length
+            };
+        }
+    }
+}
 
+export function getConfigurations(blueprint, values, partial = [], result = []) {
+    const firstLength = _.first(blueprint);
+    const target =  (partial.length >= firstLength) ? _.sum(partial.slice(0, firstLength)) : null;
+    const group = getGroup(blueprint, partial);
+    const total = _.sum(group.values);
+
+    // The target is determined by the sum of the first group.
+    // It's null if we are yet to complete the first group.
+    if (target) {
+        // The group has exceeded the limit. 
+        if (total > target)
+            return;
+
+        // We completed the group, but failed to hit the target.
+        if (group.values.length == group.length && total != target)
+            return;
+    }
+
+    if (!values.length)
+        result.push(partial);
+    
+    // Pick each value from values.
+    for (let i = 0; i < values.length; i += 1) {
+        getConfigurations(blueprint, remove(values, i), partial.concat(values[i]), result);
+    }
+    
+    return unique(result);
 }
 
 export function run() {

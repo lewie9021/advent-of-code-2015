@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, getPermutations, uniquePermutations, getConfigurations } from "./";
+import { title, parse, getPermutations, unique, getGroup, getConfigurations } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
@@ -132,11 +132,11 @@ describe(title, function() {
             
         });
 
-        describe("uniquePermutations", function() {
+        describe("unique", function() {
 
             it("should return 6 permutations given getPermutations([1, 2, 3], 2)", function() {
                 const permutations = getPermutations([1, 2, 3], 2);
-                const result = uniquePermutations(permutations);
+                const result = unique(permutations);
                 const expected = [
                     [1, 1],
                     [1, 2],
@@ -159,7 +159,7 @@ describe(title, function() {
 
             it("should return 10 permutations given getPermutations([1, 2, 3], 3)", function() {
                 const permutations = getPermutations([1, 2, 3], 3);
-                const result = uniquePermutations(permutations);
+                const result = unique(permutations);
                 const expected = [
                     [1, 1, 1],
                     [1, 1, 2],
@@ -183,13 +183,99 @@ describe(title, function() {
                     expect(match.length).to.eq(1);
                 }, result);
             });
+
+            it("should return 1 permutation given identical permutations", function() {
+                const permutations = [
+                    [5, 1, 4, 2, 3],
+                    [5, 1, 4, 3, 2],
+                    [5, 2, 3, 1, 4],
+                    [5, 2, 3, 4, 1],
+                    [5, 3, 2, 1, 4],
+                    [5, 3, 2, 4, 1],
+                    [5, 4, 1, 2, 3],
+                    [5, 4, 1, 3, 2]
+                ];
+                const result = unique(permutations);
+                
+                expect(result).to.eql([
+                    [5, 1, 4, 2, 3]
+                ]);
+            });
+
+            it("should return sorted permutations if 'sort' is true", function() {
+                const permutations = [
+                    [5, 1, 4, 2, 3],
+                    [5, 1, 4, 3, 2],
+                    [5, 2, 3, 1, 4],
+                    [5, 2, 3, 4, 1],
+                    [5, 3, 2, 1, 4],
+                    [5, 3, 2, 4, 1],
+                    [5, 4, 1, 2, 3],
+                    [5, 4, 1, 3, 2]
+                ];
+                const result = unique(permutations, true);
+                
+                expect(result).to.eql([
+                    [1, 2, 3, 4, 5]
+                ]);
+            });
             
         });
-        
-        xdescribe("getConfigurations", function() {
 
-            it("should work", function() {
-                
+        describe("getGroup", function() {
+
+            it("should return {values: [], length: 0}, given [1, 2, 2], and []", function() {
+                const result = getGroup([1, 2, 2], []);
+
+                expect(result).to.eql({values: [], length: 0});
+            });
+
+            it("should return {values: [5], length: 1}, given [1, 2, 2], and [5]", function() {
+                const result = getGroup([1, 2, 2], [5]);
+
+                expect(result).to.eql({values: [5], length: 1});
+            });
+            
+            it("should return {values: [4], length: 2}, given [1, 2, 2] and [5, 4]", function() {
+                const result = getGroup([1, 2, 2], [5, 4]);
+
+                expect(result).to.eql({values: [4], length: 2});
+            });
+            
+            it("should return {values: [4, 3], length: 2}, given [1, 2, 2] and [5, 4, 3]", function() {
+                const result = getGroup([1, 2, 2], [5, 4, 3]);
+
+                expect(result).to.eql({values: [4, 3], length: 2});
+            });
+
+            it("should return {values: [2], length: 2}, given [1, 2, 2] and [5, 4, 3, 2]", function() {
+                const result = getGroup([1, 2, 2], [5, 4, 3, 2]);
+
+                expect(result).to.eql({values: [2], length: 2});
+            });
+
+        });
+        
+        describe("getConfigurations", function() {
+
+            it("should return 4 configurations, given [2, 2, 1] and [1, 2, 3, 4, 5]", function() {
+                const values = [1, 2, 3, 4, 5];
+                const blueprint = [1, 2, 2];
+                const result = getConfigurations(blueprint, values);
+                const expected = [
+                    [[1, 4], [2, 3], [5]],
+                    [[1, 4], [3, 2], [5]],
+                    [[4, 1], [2, 3], [5]],
+                    [[4, 1], [3, 2], [5]]
+                ];
+
+                expect(result.length).to.eq(4);
+
+                _.forEach((expected) => {
+                    const match = _.filter(_.isEqual(expected), result);
+
+                    expect(match.length).to.eq(1);
+                }, result);
             });
             
         });
