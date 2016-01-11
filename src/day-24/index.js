@@ -75,22 +75,6 @@ export function getCombinations(values, target, limit = null) {
     return findCombinations(values);
 };
 
-export function unique(permutations, sort) {
-    let store = {};
-
-    return _.reduce((result, permutation) => {
-        const sorted = _.sortBy(_.identity, permutation);
-
-        if (store[sorted])
-            return result;
-
-        store[sorted] = true;
-        result.push(sort ? sorted : permutation);
-
-        return result;
-    }, [], permutations);
-}
-
 export function getRanges(blueprint) {
     let sum = 0;
 
@@ -100,20 +84,6 @@ export function getRanges(blueprint) {
 
         return result;
     }, [], blueprint);
-}
-
-export const chunkBy = _.curry((blueprint, values, result = []) => {
-    if (!blueprint.length)
-        return result;
-    
-    const length = _.first(blueprint);
-    const group = values.slice(0, length);
-    
-    return chunkBy(blueprint.slice(1), values.slice(length), result.concat([group]));
-}, 2);
-
-function inRange(a, b, x) {
-    return  (x >= a && x <= b);
 }
 
 export function getConfigurations(values) {

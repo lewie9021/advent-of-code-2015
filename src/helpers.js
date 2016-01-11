@@ -17,6 +17,35 @@ export const warpValue = (x, max) => ((x % max) + max) % max;
 
 export const remove = (arr, i) => arr.slice(0, i).concat(arr.slice(i + 1));
 
+export const chunkBy = _.curry((blueprint, values, result = []) => {
+    if (!blueprint.length)
+        return result;
+    
+    const length = _.first(blueprint);
+    const group = values.slice(0, length);
+    
+    return chunkBy(blueprint.slice(1), values.slice(length), result.concat([group]));
+}, 2);
+
+export const inRange = _.curry((a, b, x) => x >= a && x <= b);
+
+// Takes a two-dimensional array of arrays and returns only the ones that are unique.
+export const uniqueDeep = _.curry((sort, arrays) => {
+    let store = {};
+
+    return _.reduce((result, array) => {
+        const sorted = _.sortBy(_.identity, array);
+
+        if (store[sorted])
+            return result;
+
+        store[sorted] = true;
+        result.push(sort ? sorted : array);
+
+        return result;
+    }, [], arrays);
+});
+
 // A less annoying _.assign function.
 export const assign = (...args) => {
     const object = _.last(args);
