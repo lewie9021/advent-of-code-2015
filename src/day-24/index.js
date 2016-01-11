@@ -75,17 +75,6 @@ export function getCombinations(values, target, limit = null) {
     return findCombinations(values);
 };
 
-export function getRanges(blueprint) {
-    let sum = 0;
-
-    return _.reduce((result, length) => {
-        result.push([sum, sum + length]);
-        sum += length;
-
-        return result;
-    }, [], blueprint);
-}
-
 export function getConfigurations(values) {
     // Looking at the example, each group has a sum of exactly one third of the total.
     const target = _.sum(values) / 3;
