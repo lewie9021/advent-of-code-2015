@@ -1,10 +1,56 @@
+import _ from "lodash-fp";
 import { expect } from "chai";
-import { title, getCodeAt } from "./";
+import { title, parse, getCodeAt } from "./";
 
 describe(title, function() {
 
     describe("Part 1:", function() {
 
+        describe("parse", function() {
+
+            it("should return an array of numeric values", function() {
+                const input = [
+                    "A: 1",
+                    "B: 2",
+                    "C: 3"
+                ].join("\n");
+                const result = parse(input);
+                
+                expect(result).to.be.an("array");
+            });
+
+            it("should return an array of length equal to input line count", function() {
+                const input = [
+                    "A: 54",
+                    "B: 25",
+                    "C: 1"
+                ];
+                const result = parse(input.join("\n"));
+                
+                expect(result.length).to.eq(input.length);
+            });
+            
+            it("should grab the value at the end of each line", function() {
+                const inputs = [
+                    ["A: 32", "B: 45", "C: 123"],
+                    ["A: 65", "B: 21", "C: 5"],
+                    ["A: 99", "B: 84", "C: 34"]
+                ];
+                const expectations = [
+                    [32, 45, 123],
+                    [65, 21, 5],
+                    [99, 84, 34]
+                ];
+
+                _.forEach((input, index) => {
+                    const result = parse(input.join("\n"));
+                    
+                    expect(result).to.eql(expectations[index]);
+                }, inputs);
+            });
+            
+        });
+        
         describe("getCodeAt", function() {
 
             it("should return 20151125, given x: 1, y: 1", function() {
