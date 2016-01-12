@@ -10,34 +10,6 @@ export const parse = _.compose(
     split("\n")
 );
 
-export function getPermutations(values, size) {
-    let store = {};
-    let result = [];
-
-    const findPermutations = (values, partial = []) => {
-        if (partial.length >= size) {
-            const sorted = _.sortBy(_.identity, partial);
-
-            if (store[sorted])
-                return result;
-
-            store[sorted] = true;
-            result.push(sorted);
-            
-	    return result;
-        }
-
-        // Pick each value from values.
-        _.forEach((index) => {
-            getPermutations(remove(values, index), partial.concat(values[index]));
-        }, _.range(0, values.length));
-        
-        return result;
-    };
-
-    return findPermutations(values);
-}
-
 export function getCombinations(values, target, limit = null) {
     let result = [];
     
