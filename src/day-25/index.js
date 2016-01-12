@@ -11,19 +11,32 @@ export const parse = _.compose(
 );
 
 export function getCodeAt(targetX, targetY) {
-    const findCode = (value, height, x, y) => {
-        if (x == targetX && y == targetY)
-            return value;
+    let value = 20151125;
+    let height = 1;
+    let x = 1;
+    let y = 1;
 
-        const nextValue = (value * 252533) % 33554393;
-        
-        if (y > 1)
-            return findCode(nextValue, height, x + 1, y - 1);
-        
-        return findCode(nextValue, height + 1, 1, height + 1);
-    };
+    while (x != targetX || y != targetY) {
+        // Find the next value.
+        value = (value * 252533) % 33554393;
 
-    return findCode(20151125, 1, 1, 1);
+        if (y == 1) {
+            // Height is used to determine the value of
+            // 'y' when we are forced to wrap.
+            height += 1;
+            
+            // Reset the x and y position. This time,
+            // we start at the next y down.
+            x = 1;
+            y = height;
+        } else {
+            // Modify the x and y to create a diagonal effect.
+            x += 1;
+            y -= 1;
+        }
+    }
+
+    return value;
 }
 
 export function run() {
