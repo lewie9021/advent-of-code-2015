@@ -39,11 +39,11 @@ export function getCombinations(values, target, limit = null) {
     return findCombinations(values);
 };
 
-export function getQuantumEntanglement(values) {
+export function getQuantumEntanglement(values, groups) {
     // Looking at the example, each group has a sum of exactly one third of the total.
-    const target = _.sum(values) / 3;
+    const target = _.sum(values) / groups;
     // Since we want the least amount of packages, it can't be less than the total / 3.
-    const limit = values.length / 3;
+    const limit = values.length / groups;
     // Get a list of combinations which have sum of 'target'.
     const combinations = getCombinations(values, target, limit);
     // Get the length of the shortest combination.
@@ -63,5 +63,6 @@ export function run() {
     const input = FS.readFileSync(inputPath, "utf-8").trim();
     const values = parse(input);
 
-    console.log("What is the quantum entanglement of the first group of packages in the ideal configuration?", getQuantumEntanglement(values));
+    console.log("What is the quantum entanglement of the first group of packages in the ideal configuration (3 groups)?", getQuantumEntanglement(values, 3));
+    console.log("What is the quantum entanglement of the first group of packages in the ideal configuration (4 groups)?", getQuantumEntanglement(values, 4));
 }

@@ -60,15 +60,30 @@ describe(title, function() {
         
         describe("getQuantumEntanglement", function() {
 
-            it("should return 99, given the values [1, 2, 3, 4, 5, 7, 8, 9, 10, 11]", function() {
+            it("should return 99, given values: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11] and groups: 3", function() {
                 const values = [1, 2, 3, 4, 5, 7, 8, 9, 10, 11];
-                const result = getQuantumEntanglement(values);
+                const result = getQuantumEntanglement(values, 3);
 
                 expect(result).to.eq(99);
             });
             
         });
 
+    });
+
+    describe("Part 2:", function() {
+
+        describe("getQuantumEntanglement", function() {
+
+            it("should return 44, given values: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11] and groups: 4", function() {
+                const values = [1, 2, 3, 4, 5, 7, 8, 9, 10, 11];
+                const result = getQuantumEntanglement(values, 4);
+
+                expect(result).to.eq(44);
+            });
+            
+        });
+        
     });
 
 });
