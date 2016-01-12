@@ -9,41 +9,33 @@ describe(title, function() {
         describe("parse", function() {
 
             it("should return an array of numeric values", function() {
-                const input = [
-                    "A: 1",
-                    "B: 2",
-                    "C: 3"
-                ].join("\n");
+                const input = "Enter the code at row 2, column 3.";
                 const result = parse(input);
                 
                 expect(result).to.be.an("array");
             });
 
-            it("should return an array of length equal to input line count", function() {
-                const input = [
-                    "A: 54",
-                    "B: 25",
-                    "C: 1"
-                ];
-                const result = parse(input.join("\n"));
+            it("should return an array of length equal to numerical values", function() {
+                const input = "Enter the code at row 123, column 456.";
+                const result = parse(input);
                 
-                expect(result.length).to.eq(input.length);
+                expect(result.length).to.eq(2);
             });
             
             it("should grab the value at the end of each line", function() {
                 const inputs = [
-                    ["A: 32", "B: 45", "C: 123"],
-                    ["A: 65", "B: 21", "C: 5"],
-                    ["A: 99", "B: 84", "C: 34"]
+                    "Enter the code at row 32, column 45.",
+                    "Enter the code at row 65, column 21.",
+                    "Enter the code at row 99, column 123."
                 ];
                 const expectations = [
-                    [32, 45, 123],
-                    [65, 21, 5],
-                    [99, 84, 34]
+                    [32, 45],
+                    [65, 21],
+                    [99, 123]
                 ];
 
                 _.forEach((input, index) => {
-                    const result = parse(input.join("\n"));
+                    const result = parse(input);
                     
                     expect(result).to.eql(expectations[index]);
                 }, inputs);

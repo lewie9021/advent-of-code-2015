@@ -7,9 +7,7 @@ export const title = "Day 25: Let It Snow";
 
 export const parse = _.compose(
     _.map(_.parseInt(10)),
-    _.map(_.first),
-    _.map(match(/\d+$/)),
-    split("\n")
+    match(/\d+/g)
 );
 
 export function getCodeAt(targetX, targetY) {
