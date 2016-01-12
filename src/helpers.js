@@ -7,7 +7,7 @@ export const join = _.curry((delimiter, str) => str.join(delimiter));
 
 export const match = _.curry((pattern, str) => str.match(pattern));
 
-export const multiply = _.curry((x, y) => x * y, 2);
+export const multiply = _.curry((x, y) => x * y);
 
 export const merge = (f, ...values) => __.merge(...values, f);
 
