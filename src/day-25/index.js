@@ -12,6 +12,22 @@ export const parse = _.compose(
     split("\n")
 );
 
+export function getCodeAt(targetX, targetY) {
+    const findCode = (value, height, x, y) => {
+        if (x == targetX && y == targetY)
+            return value;
+
+        const nextValue = (value * 252533) % 33554393;
+        
+        if (y > 1)
+            return findCode(nextValue, height, x + 1, y - 1);
+        
+        return findCode(nextValue, height + 1, 1, height + 1);
+    };
+
+    return findCode(20151125, 1, 1, 1);
+}
+
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
