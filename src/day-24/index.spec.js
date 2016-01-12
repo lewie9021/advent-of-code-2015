@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, getConfigurations } from "./";
+import { title, parse, getQuantumEntanglement } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
@@ -26,16 +26,21 @@ describe(title, function() {
             
         });
 
-        describe("getConfigurations", function() {
+        describe("getCombinations", function() {
 
-            it("should return 4 configurations, given [1, 2, 2] and [1, 2, 3, 4, 5]", function() {
-                const values = [1, 2, 3, 4, 5];
-                const blueprint = [1, 2, 2];
-                const result = getConfigurations(blueprint, values);
+            it("should work", function() {
+                
+            });
+            
+        });
+        
+        describe("getQuantumEntanglement", function() {
 
-                expect(result).to.eql([
-                    [[5], [1, 4], [2, 3]]
-                ]);
+            it("should return 99, given the values [1, 2, 3, 4, 5, 7, 8, 9, 10, 11]", function() {
+                const values = [1, 2, 3, 4, 5, 7, 8, 9, 10, 11];
+                const result = getQuantumEntanglement(values);
+
+                expect(result).to.eq(99);
             });
             
         });
