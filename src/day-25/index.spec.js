@@ -66,19 +66,19 @@ describe(title, function() {
             });
 
             it("should return 18749137, given x: 2, y: 1", function() {
-                const result = getCodeAt(1, 2);
+                const result = getCodeAt(2, 1);
 
                 expect(result).to.eq(18749137);
             });
 
             it("should return 1601130, given x: 3, y: 3", function() {
-                const result = getCodeAt(1, 2);
+                const result = getCodeAt(3, 3);
 
                 expect(result).to.eq(1601130);
             });
 
             it("should return 28094349, given x: 3, y: 5", function() {
-                const result = getCodeAt(1, 2);
+                const result = getCodeAt(3, 5);
 
                 expect(result).to.eq(28094349);
             });
