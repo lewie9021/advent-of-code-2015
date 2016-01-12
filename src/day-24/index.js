@@ -1,7 +1,7 @@
 import FS from "fs";
 import Path from "path";
 import _ from "lodash-fp";
-import { split, remove } from "../helpers";
+import { multiply, split, remove } from "../helpers";
 
 export const title = "Day 24: It Hangs in the Balance";
 
@@ -39,21 +39,13 @@ export function getPermutations(values, size) {
 }
 
 export function getCombinations(values, target, limit = null) {
-    let store = {};
     let result = [];
-
+    
     const findCombinations = (values, partial = []) => {
         const total = _.sum(partial);
         
-        if (total === target) {
-            const sorted = _.sortBy(_.identity, partial);
-
-            if (store[sorted])
-                return result;
-
-            store[sorted] = true;
-            result.push(sorted);
-        }
+        if (total === target)
+            result.push(partial);
 
         if (total >= target)
             return result;
@@ -71,7 +63,7 @@ export function getCombinations(values, target, limit = null) {
         
         return result;
     };
-    
+
     return findCombinations(values);
 };
 
@@ -79,11 +71,19 @@ export function getConfigurations(values) {
     // Looking at the example, each group has a sum of exactly one third of the total.
     const target = _.sum(values) / 3;
     // Since we want the least amount of packages, it can't be less than the total / 3.
-    const limit = Math.floor(values.length / 3);
+    const limit = values.length / 3;
     // Get a list of combinations which have sum of 'target'.
     const combinations = getCombinations(values, target, limit);
-    
-    console.log("combinations.length:", combinations.length);
+    // Get the shortest configuration size.
+    const shortest = _.min(_.map(_.get("length"), combinations));
+
+    return _.compose(
+        _.min,
+        // Get the quantum entanglement (product) of the combination.
+        _.map((combination) => _.reduce(multiply, 1, combination)),
+        // Filter out combinations that aren't the shortest.
+        _.filter((combination) => combination.length == shortest)
+    )(combinations);
 }
 
 export function run() {
@@ -91,8 +91,5 @@ export function run() {
     const input = FS.readFileSync(inputPath, "utf-8").trim();
     const values = parse(input);
 
-    getCombinations(values);
-    
-    
-    console.log("What is the quantum entanglement of the first group of packages in the ideal configuration?");
+    console.log("What is the quantum entanglement of the first group of packages in the ideal configuration?", getConfigurations(values));
 }
