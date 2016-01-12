@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { title, parse, getQuantumEntanglement } from "./";
+import { title, parse, getCombinations, getQuantumEntanglement } from "./";
 import _ from "lodash-fp";
 
 describe(title, function() {
@@ -28,10 +28,34 @@ describe(title, function() {
 
         describe("getCombinations", function() {
 
-            it("should work", function() {
-                
+            it("should return an empty array, given values: []", function() {
+                const result = getCombinations([], 5);
+
+                expect(result).to.eql([]);
             });
-            
+
+            it("should return one combination, given values: [5] and target: 5", function() {
+                const result = getCombinations([5], 5);
+
+                expect(result).to.eql([[5]]);
+            });
+
+            it("should return three combinations, given values: [1, 2, 3, 4, 5] and target: 5", function() {
+                const result = getCombinations([1, 2, 3, 4, 5], 5);
+
+                expect(result).to.eql([
+                    [1, 4],
+                    [2, 3],
+                    [5]
+                ]);
+            });
+
+            it("should return one combination, given values: [1, 2, 3, 4, 5], target: 5, and limit: 1", function() {
+                const result = getCombinations([1, 2, 3, 4, 5], 5, 1);
+                
+                expect(result).to.eql([[5]]);
+            });
+
         });
         
         describe("getQuantumEntanglement", function() {

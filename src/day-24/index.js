@@ -46,7 +46,7 @@ export function getQuantumEntanglement(values) {
     const limit = values.length / 3;
     // Get a list of combinations which have sum of 'target'.
     const combinations = getCombinations(values, target, limit);
-    // Get the shortest configuration size.
+    // Get the length of the shortest combination.
     const shortest = _.min(_.map(_.get("length"), combinations));
 
     return _.compose(
