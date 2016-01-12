@@ -42,6 +42,7 @@ export function getCodeAt(targetX, targetY) {
 export function run() {
     const inputPath = Path.join(__dirname, "input.txt");
     const input = FS.readFileSync(inputPath, "utf-8").trim();
-    
-    console.log("What code do you give the machine?");
+    const [targetY, targetX] = parse(input);
+
+    console.log("What code do you give the machine?", getCodeAt(targetX, targetY));
 }
